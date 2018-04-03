@@ -37,7 +37,7 @@ dataset = read.csv("../datasets/applesOranges.csv")
 
 xmat = matrix(c(dataset$x.1, dataset$x.2), ncol = 2)
 
-y = as.factor(dataset$y)
+y = dataset$y
 
 # print(test_correctness(c(0.5, 0.5), xmat, y))
 
@@ -82,7 +82,7 @@ for(angle in seq(0, 80, 10))
 
 corr = test_correctness(c(0, 1), xmat, y)
 
-ploter = ploter + geom_vline(xintercept = 0)
+# ploter = ploter + geom_vline(xintercept = 0)
 
 angle_vec = c(angle_vec, 90)
 
@@ -108,12 +108,12 @@ for(angle in seq(100, 180, 10))
 
     corr_vec = c(corr_vec, corr)
 
-    if(angle == 120)
-    {
-        line_y = dataset$x.1 * w2 / w1
+    # if(angle == 120)
+    # {
+    #     line_y = dataset$x.1 * w2 / w1
 
-        ploter = ploter + geom_line(aes(y = line_y))
-    }
+    #     ploter = ploter + geom_line(aes(y = line_y))
+    # }
 }
 
 result = data.frame(
@@ -123,12 +123,36 @@ result = data.frame(
     correctness = corr_vec
 )
 
-print(result)
+# print(result)
 
-# line_x = seq(-2, 1, 0.05)
+max_corr = 0
 
-# line_y = w2 / w1 * dataset$x.1
+row_idx = 0
+
+for(idx in c(1:nrow(result)))
+{
+    if(result$correctness[idx] > max_corr)
+    {
+        max_corr = result$correctness[idx]
+
+        row_idx = idx
+    }
+}
+
+w1 = result$w1[row_idx]
+
+w2 = result$w2[row_idx]
+
+print(result$angle[row_idx])
+
+line_y = w2 / w1 * dataset$x.1
+
+ploter = ploter + geom_line(aes(y = line_y))
 
 # ggplot(dataset, aes(x = x.1, y = x.2, color=y)) + geom_point() + geom_line(aes(y = line_y))
 
 ggsave("./applesOrangesLines.png")
+
+ploter = ggplot(result, aes(x = angle, y = correctness)) + geom_line()
+
+ggsave("./e2-1b_cor-angle.png")
