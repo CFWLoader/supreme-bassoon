@@ -31,13 +31,13 @@ corr_vec = c()
 
 ploter = ggplot(dataset, aes(x = x.1, y = x.2, color=y)) + geom_point()
 
-for(angle in seq(0, 80, 10))
+for(angle in seq(0, 180, 10))
 {
     # print(tan(angle))
 
-    w1 = 1 / sqrt(1 + tan(angle * pi / 180)**2)
+    w1 = sin(angle * pi / 180)
 
-    w2 = w1 * tan(angle * pi / 180)
+    w2 = cos(angle * pi / 180)
 
     corr = correctness(perceptron(c(w1, w2), xmat), y)
 
@@ -49,47 +49,6 @@ for(angle in seq(0, 80, 10))
 
     corr_vec = c(corr_vec, corr)
 
-    # line_y = c(line_y, dataset$x.1 * w2 / w1)
-
-    # print(paste(w2 / w1, tan(angle * pi / 180)))
-
-    # ploter = ploter + geom_line(aes(y = line_y[angle / 10]))
-}
-
-corr = correctness(perceptron(c(0, 1), xmat), y)
-
-# ploter = ploter + geom_vline(xintercept = 0)
-
-angle_vec = c(angle_vec, 90)
-
-w1_vec = c(w1_vec, 0)
-
-w2_vec = c(w2_vec, 1)
-
-corr_vec = c(corr_vec, corr)
-
-for(angle in seq(100, 180, 10))
-{
-    w1 = - 1 / sqrt(1 + tan(angle * pi / 180)**2)
-
-    w2 = w1 * tan(angle * pi / 180)
-
-    corr = corr = correctness(perceptron(c(w1, w2), xmat), y)
-
-    angle_vec = c(angle_vec, angle)
-
-    w1_vec = c(w1_vec, w1)
-
-    w2_vec = c(w2_vec, w2)
-
-    corr_vec = c(corr_vec, corr)
-
-    # if(angle == 120)
-    # {
-    #     line_y = dataset$x.1 * w2 / w1
-
-    #     ploter = ploter + geom_line(aes(y = line_y))
-    # }
 }
 
 result = data.frame(

@@ -29,42 +29,11 @@ corr_vec = c()
 
 for(theta in seq(-3, 3, 0.05))
 {
-    for(angle in seq(0, 80, 10))
+    for(angle in seq(0, 180, 10))
     {
-        w1 = 1 / sqrt(1 + tan(angle * pi / 180)**2)
+        w1 = sin(angle * pi / 180)
 
-        w2 = w1 * tan(angle * pi / 180)
-
-        corr = correctness(perceptron(c(theta, w1, w2), xmat), y)
-
-        angle_vec = c(angle_vec, angle)
-
-        w1_vec = c(w1_vec, w1)
-
-        w2_vec = c(w2_vec, w2)
-
-        theta_vec = c(theta, theta_vec)
-
-        corr_vec = c(corr_vec, corr)
-    }
-
-    corr = correctness(perceptron(c(theta, 0, 1), xmat), y)
-
-    angle_vec = c(angle_vec, 90)
-
-    w1_vec = c(w1_vec, 0)
-
-    w2_vec = c(w2_vec, 1)
-    
-    theta_vec = c(theta, theta_vec)
-
-    corr_vec = c(corr_vec, corr)
-
-    for(angle in seq(100, 180, 10))
-    {
-        w1 = - 1 / sqrt(1 + tan(angle * pi / 180)**2)
-
-        w2 = w1 * tan(angle * pi / 180)
+        w2 = cos(angle * pi / 180)
 
         corr = correctness(perceptron(c(theta, w1, w2), xmat), y)
 
@@ -108,14 +77,18 @@ for(idx in c(1:nrow(result)))
 
 angle = result$angle[row_idx]
 
-w1 = sin(pi * angle / 180 + pi / 2)
+w1 = result$w1[row_idx]
 
-w2 = cos(pi * angle / 180 + pi / 2)
+w2 = result$w2[row_idx]
 
 theta = result$theta[row_idx]
 
-line_y = w2 / w1 * dataset$x.1 + theta
+line_y = - (w2 / w1) * dataset$x.1 + theta
 
 ggplot(dataset, aes(x = x.1, y = x.2, color = y)) + geom_point() + geom_line(aes(y = line_y))
 
 ggsave('./e2-1e.png')
+
+ggplot(result, aes(x = angle, y = theta)) + geom_tile(aes(fill = correctness), colour = "blue") + scale_fill_gradient(low = "blue", high = "red")
+
+ggsave('./e2-1e-heatmap.png')

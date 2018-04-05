@@ -9,13 +9,13 @@ source('./perceptron.R')
 
 dataset = read.csv("../datasets/applesOranges.csv")
 
-w1 = 1 / sqrt(1 + tan(pi * 20 / 180)**2)
+w1 = sin(20 * pi / 180)
 
-w2 = w1 * tan(pi * 20 / 180)
+w2 = cos(20 * pi / 180)
 
 theta = -0.15
 
-line_y = w2 / w1 * dataset$x.1 + theta
+line_y = - w1 / w2 * dataset$x.1 + theta
 
 ploter = ploter + geom_line(aes(y = line_y))
 
