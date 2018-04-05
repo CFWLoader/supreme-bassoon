@@ -1,35 +1,11 @@
-# library(ggplot2)
+library(ggplot2)
 
 # Set working dir to this file's path.
 script.dir = dirname(sys.frame(1)$ofile)
 
 setwd(script.dir)
 
-test_correctness = function(w, x, y)
-{
-    count = 0
-
-    for(idx in c(1:nrow(x)))
-    {
-        val = w %*% x[idx,]
-
-        if(val < 0)
-        {
-            val = 0
-        }
-        else
-        {
-            val = 1
-        }
-
-        if(val == y[idx])
-        {
-            count = count + 1
-        }
-    }
-
-    return(count / length(x))
-}
+source('./perceptron.R')
 
 dataset = read.csv("../datasets/applesOranges.csv")
 
@@ -63,7 +39,7 @@ for(angle in seq(0, 80, 10))
 
     w2 = w1 * tan(angle * pi / 180)
 
-    corr = test_correctness(c(w1, w2), xmat, y)
+    corr = correctness(perceptron(c(w1, w2), xmat), y)
 
     angle_vec = c(angle_vec, angle)
 
@@ -80,7 +56,7 @@ for(angle in seq(0, 80, 10))
     # ploter = ploter + geom_line(aes(y = line_y[angle / 10]))
 }
 
-corr = test_correctness(c(0, 1), xmat, y)
+corr = correctness(perceptron(c(0, 1), xmat), y)
 
 # ploter = ploter + geom_vline(xintercept = 0)
 
@@ -98,7 +74,7 @@ for(angle in seq(100, 180, 10))
 
     w2 = w1 * tan(angle * pi / 180)
 
-    corr = test_correctness(c(w1, w2), xmat, y)
+    corr = corr = correctness(perceptron(c(w1, w2), xmat), y)
 
     angle_vec = c(angle_vec, angle)
 
@@ -123,7 +99,7 @@ result = data.frame(
     correctness = corr_vec
 )
 
-# print(result)
+print(result)
 
 max_corr = 0
 
@@ -143,7 +119,7 @@ w1 = result$w1[row_idx]
 
 w2 = result$w2[row_idx]
 
-print(result$angle[row_idx])
+# print(result$angle[row_idx])
 
 line_y = w2 / w1 * dataset$x.1
 
