@@ -30,7 +30,7 @@ corr_vec = c()
 
 # print(c(-3, w1, w2))
 
-for(theta in seq(-3, 3, 0.1))
+for(theta in seq(-3, 3, 0.05))
 {
     w = c(theta, w1, w2)
 

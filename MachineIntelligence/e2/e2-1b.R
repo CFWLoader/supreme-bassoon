@@ -115,9 +115,11 @@ for(idx in c(1:nrow(result)))
     }
 }
 
-w1 = result$w1[row_idx]
+angle = result$angle[row_idx]
 
-w2 = result$w2[row_idx]
+w1 = sin(pi * angle / 180 + pi / 2)
+
+w2 = cos(pi * angle / 180 + pi / 2)
 
 # print(result$angle[row_idx])
 
