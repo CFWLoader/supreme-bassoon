@@ -85,7 +85,7 @@ theta = result$theta[row_idx]
 
 line_y = - (w2 / w1) * dataset$x.1 + theta
 
-ggplot(dataset, aes(x = x.1, y = x.2, color = y)) + geom_point() + geom_line(aes(y = line_y))
+ggplot(dataset, aes(x = x.1, y = x.2, color = as.factor(y))) + geom_point() + geom_line(aes(y = line_y, color = as.factor(3))) + scale_color_manual(values = c("red", "green", "black"))
 
 ggsave('./e2-1e.png')
 
