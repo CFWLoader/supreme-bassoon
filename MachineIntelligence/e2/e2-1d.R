@@ -15,9 +15,9 @@ w2 = cos(20 * pi / 180)
 
 theta = -0.15
 
-line_y = - w1 / w2 * dataset$x.1 + theta
+line_y = - w1 / w2 * dataset$x.1 - theta / w2
 
-ploter = ploter + geom_line(aes(y = line_y))
+# ploter = ploter + geom_line(aes(y = line_y))
 
 ggplot(dataset, aes(x = x.1, y = x.2, color=as.factor(y))) + geom_point() + geom_line(aes(y = line_y, colour = as.factor(3))) + scale_color_manual(values = c("red", "green", "black"))
 

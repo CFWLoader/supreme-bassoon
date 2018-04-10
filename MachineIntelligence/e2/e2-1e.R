@@ -83,12 +83,12 @@ w2 = result$w2[row_idx]
 
 theta = result$theta[row_idx]
 
-line_y = - (w2 / w1) * dataset$x.1 + theta
+line_y = (- w1 * dataset$x.1 - theta) / w2
 
 ggplot(dataset, aes(x = x.1, y = x.2, color = as.factor(y))) + geom_point() + geom_line(aes(y = line_y, color = as.factor(3))) + scale_color_manual(values = c("red", "green", "black"))
 
 ggsave('./e2-1e.png')
 
-ggplot(result, aes(x = angle, y = theta)) + geom_tile(aes(fill = correctness), colour = "blue") + scale_fill_gradient(low = "blue", high = "red")
+ggplot(result, aes(x = angle, y = theta)) + geom_tile(aes(fill = correctness), colour = "blue") + scale_fill_gradient(low = "green", high = "red")
 
 ggsave('./e2-1e-heatmap.png')

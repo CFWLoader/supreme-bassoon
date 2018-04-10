@@ -86,7 +86,7 @@ ggplot(dataset, aes(x = x.1, y = x.2, color=as.factor(y))) + geom_point() + geom
 
 # ggplot(dataset, aes(x = x.1, y = x.2, color=y)) + geom_point() + geom_line(aes(y = line_y))
 
-ggsave("./applesOrangesLines.png")
+ggsave("./e2-1b.png")
 
 ploter = ggplot(result, aes(x = angle, y = correctness)) + geom_line()
 
