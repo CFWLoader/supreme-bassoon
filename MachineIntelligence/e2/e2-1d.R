@@ -19,6 +19,6 @@ line_y = - (w1 / w2) * dataset$x.1 - theta
 
 # ploter = ploter + geom_line(aes(y = line_y))
 
-ggplot(dataset, aes(x = x.1, y = x.2, color=as.factor(y))) + geom_point() + geom_line(aes(y = line_y, color = as.factor(2)))
+ggplot(dataset, aes(x = x.1, y = x.2, color=as.factor(y))) + geom_point() + geom_line(aes(y = line_y, color = as.factor(2))) + scale_color_manual(values = c("red", "blue", "black"))
 
 ggsave("./e2-1d.png")

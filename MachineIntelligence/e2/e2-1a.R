@@ -7,6 +7,6 @@ setwd(script.dir)
 
 dataset = read.csv("../datasets/applesOranges.csv")
 
-ggplot(dataset, aes(x = x.1, y = x.2, color=y)) + geom_point()
+ggplot(dataset, aes(x = x.1, y = x.2, color=as.factor(y))) + geom_point()
 
-ggsave("./applesOranges.png")
+ggsave("./e2-1a.png")
