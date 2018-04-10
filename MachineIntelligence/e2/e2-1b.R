@@ -29,15 +29,15 @@ w2_vec = c()
 
 corr_vec = c()
 
-ploter = ggplot(dataset, aes(x = x.1, y = x.2, color=y)) + geom_point()
+ploter = ggplot(dataset, aes(x = x.1, y = x.2, color=as.factor(y))) + geom_point()
 
 for(angle in seq(0, 180, 10))
 {
     # print(tan(angle))
 
-    w1 = sin(angle * pi / 180)
+    w1 = cos(angle * pi / 180)
 
-    w2 = cos(angle * pi / 180)
+    w2 = sin(angle * pi / 180)
 
     corr = correctness(perceptron(c(w1, w2), xmat), y)
 
@@ -84,7 +84,7 @@ w2 = cos(pi * angle / 180 + pi / 2)
 
 line_y = w2 / w1 * dataset$x.1
 
-ploter = ploter + geom_line(aes(y = line_y))
+ploter = ploter + geom_line(aes(y = line_y, color = as.factor(2)))
 
 # ggplot(dataset, aes(x = x.1, y = x.2, color=y)) + geom_point() + geom_line(aes(y = line_y))
 

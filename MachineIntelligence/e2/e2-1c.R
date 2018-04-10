@@ -17,10 +17,10 @@ y = dataset$y
 
 source('./perceptron.R')
 
-# According to e2-1b. Best angle is 90°.
-w1 = 1 / sqrt(1 + tan(pi * 20 / 180)**2)
+# According to e2-1b. Best angle is 20°.
+w1 = cos(pi * 20 / 180)
 
-w2 = w1 * tan(pi * 20 / 180)
+w2 = sin(pi * 20 / 180)
 
 theta_vec = c()
 

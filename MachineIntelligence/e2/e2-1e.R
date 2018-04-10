@@ -83,12 +83,12 @@ w2 = result$w2[row_idx]
 
 theta = result$theta[row_idx]
 
-line_y = (- w1 * dataset$x.1 - theta) / w2
+line_y = - (w1 / w2) * dataset$x.1 - theta
 
-nor_vec_y = (w1 / w2) * dataset$x.1 - theta / w2
+# nor_vec_y = (w2 / w1) * dataset$x.1 - theta / w2
 
-ggplot(dataset, aes(x = x.1, y = x.2, color = as.factor(y))) + geom_point() + geom_line(aes(y = line_y, color = as.factor(3))) + 
-    geom_line(aes(y = nor_vec_y, color = as.factor(4)))
+ggplot(dataset, aes(x = x.1, y = x.2, color = as.factor(y))) + geom_point() + geom_line(aes(y = line_y, color = as.factor(3)))
+    # geom_line(aes(y = nor_vec_y, color = as.factor(4)))
 
 ggsave('./e2-1e.png')
 
