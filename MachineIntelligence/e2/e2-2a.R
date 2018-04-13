@@ -55,7 +55,8 @@ generate_and_plot = function(input_x, num_hidden, num_mlps, a_stddev, file_path)
 
         y_out = mlp(input_x, w, a, b)
 
-        err = 0.5 * (y_out - input_x)**2
+        # err = 0.5 * sum((y_out + input_x)**2)
+        err = 0.5 * sum((y_out - input_x)**2)
 
         if(is.null(min_err) || err < min_err)
         {
