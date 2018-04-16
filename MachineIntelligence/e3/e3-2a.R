@@ -31,6 +31,11 @@ create_mlp_random <- function(num_input, num_output, num_mlp_hidden)
     return(weights)
 }
 
+# error_fun <- function(y_out, y_tag)
+# {
+#     return(y_tag * log(y_out) + (1 - y_tag) * log(1 - y_out))
+# }
+
 forward_propagation <- function(input, weights, transfer_funs)
 {
     layer_outputs = list()
@@ -64,9 +69,14 @@ forward_propagation <- function(input, weights, transfer_funs)
 
 # Gradients for 1 hidden layer's bp.
 # It's hard to be generalized because of derivatives.
+# After deducing derivatives by my self, I think I might code a more generic version bp.
 back_propagation_gradients_f1h <- function(input, sample_output, layer_outputs, weights)
 {
+    sample_size = nrow(input)
+
     delta_weights = list()
+
+    outputs_input_weights = weights[[2]]
 
     hidden_outputs = layer_outputs[[1]]
 
@@ -75,9 +85,10 @@ back_propagation_gradients_f1h <- function(input, sample_output, layer_outputs, 
     total_errors = y_hat - sample_output
 
     # Calculate gradients for hidden layer.
-    hidden_gradients = t(total_errors) %*% hidden_outputs
-    hidden_gradients = t(hidden_gradients)
-    hidden_gradients = rbind(hidden_gradients, sum(total_errors))
+    hidden_gradients = t(hidden_outputs) %*% total_errors
+    # hidden_gradients = t(total_errors) %*% hidden_outputs
+    # hidden_gradients = t(hidden_gradients)
+    hidden_gradients = rbind(hidden_gradients, sum(total_errors)) * (1 / sample_size)
 
     # hidden_gradients = matrix(nrow = ncol(hidden_outputs) + 1)
     # for(idx in c(1:ncol(hidden_outputs)))
@@ -86,7 +97,31 @@ back_propagation_gradients_f1h <- function(input, sample_output, layer_outputs, 
     # }
     # hidden_gradients[ncol(hidden_outputs) + 1] = sum(total_errors)
 
-    print(hidden_gradients)
+    # print(hidden_gradients)
+    input_gradients = matrix(nrow = nrow(weights[[1]]), ncol = ncol(weights[[1]]))
+
+    for(j in c(1:ncol(hidden_outputs)))
+    {
+        # tmp_grad1 = matrix(rep(0, nrow(hidden_outputs)), ncol = 1)
+
+        # for(idx in c(1:nrow(tmp_grad1)))
+        # {
+        #     tmp_grad1[idx, 1] = outputs_input_weights[j] * total_errors[idx] * hidden_outputs[idx,j] * (1 - hidden_outputs[idx,j])
+        # }
+
+        # print(tmp_grad1)
+
+        tmp_grad = outputs_input_weights[j] * total_errors * hidden_outputs[,j] * (1 - hidden_outputs[,j])
+
+        # print(tmp_grad == tmp_grad1)
+
+        input_gradients[, j] = (t(tmp_grad) %*% input)
+        # print(t(input) %*% tmp_grad)
+
+        # print(out_deri)
+    }
+
+    print(input_gradients)
 
     return(delta_weights)
 }
@@ -125,7 +160,5 @@ transfer_funs[[1]] = c(transfer_fun, transfer_fun, transfer_fun)
 layer_outputs = forward_propagation(x_mat, weights, transfer_funs)
 
 gradients = back_propagation_gradients_f1h(x_mat, y_t, layer_outputs, weights)
-
-# print(layer_outputs)
 
 # print(sum((layer_outputs[[2]] - y_t)**2)/2)
