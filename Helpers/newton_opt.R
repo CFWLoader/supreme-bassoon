@@ -1,4 +1,5 @@
 library(MASS)
+library(rjson)
 
 # newtonMO2V = function(f1, f2, f11, f12, f21, f22, initialVal, epsilon = 1e-13)
 # {
@@ -184,10 +185,14 @@ gammaParameters = function(data)
     
 }
 
-input_data = read.csv('./aqipm25.csv', fileEncoding = "UTF-8-BOM")
+# input_data = read.csv('./aqipm25.csv', fileEncoding = "UTF-8-BOM")
+
+data = read.table('./AQI.json', header = FALSE)
+
+con_data = fromJSON(as.character(data$V1))
 
 # print(head(input_data))
 
-result = gammaParameters(as.numeric(input_data$AQI))
+result = gammaParameters(as.numeric(con_data))
 
 print(result)
