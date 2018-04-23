@@ -22,7 +22,7 @@ module Weib
             pow_gam_ln_sum = pow_gam_ln_sum + ((val / a)**b)
 
             ln_sum = ln_sum + Math.log(val)
-
+        
         }
 
         weight * (Math.log(b) - b * Math.log(a)) - pow_gam_ln_sum + (b - 1) * ln_sum
@@ -151,68 +151,26 @@ module Weib
     end
 end
 
-data_table = CSV.read("../../csv_data/AQI.csv")
+def run_case()
 
-aqi_data = []
+    data_table = CSV.read("../../csv_data/AQI.csv")
 
-1.upto(data_table.length - 1) do |row|
+    aqi_data = []
 
-    aqi_data << data_table[row][0].to_f
+    1.upto(data_table.length - 1) do |row|
 
-end
+        aqi_data << data_table[row][0].to_f
 
-# Weib.estimate aqi_data
-# print Weib.loglikelihoodOpt 1, 1, aqi_data
+    end
 
-x = Matrix.column_vector([1, 1])
+    # Weib.estimate aqi_data
+    # print Weib.loglikelihoodOpt 1, 1, aqi_data
 
-gradient = Weib.gradient
+    x = Matrix.column_vector([100, 100])
 
-hessian_mat = Weib.hessian
+    gradient = Weib.gradient
 
-gradient_val = Matrix.column_vector([gradient[0].call(x[0, 0], x[1, 0], aqi_data), gradient[1].call(x[0, 0], x[1, 0], aqi_data)])
-
-hessian_val = Matrix[
-    [hessian_mat[0][0].call(x[0, 0], x[1, 0], aqi_data), hessian_mat[0][1].call(x[0, 0], x[1, 0], aqi_data)],
-    [hessian_mat[1][0].call(x[0, 0], x[1, 0], aqi_data), hessian_mat[1][1].call(x[0, 0], x[1, 0], aqi_data)]]
-
-hessian_inv_val = hessian_val.inv
-
-delta_x = hessian_inv_val * gradient_val
-
-xn = x - delta_x
-
-llv = Weib.loglikelihood(x[0, 0], x[1, 0], aqi_data)
-
-llv_next = Weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
-
-step_size = 1
-
-while llv_next < llv do
-
-    step_size /= 2
-
-    xn = x - step_size * delta_x
-
-    llv_next = Weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
-
-end
-
-iteration = 1
-
-puts "Iteration: #{iteration}, LLVN: #{llv_next}"
-puts "Gra: #{gradient_val}, H: #{hessian_val}"
-puts "X(k+1): #{xn}"
-
-while iteration < 15 do 
-
-    iteration += 1
-
-    x = xn
-
-    llv = llv_next 
-
-    step_size = 1
+    hessian_mat = Weib.hessian
 
     gradient_val = Matrix.column_vector([gradient[0].call(x[0, 0], x[1, 0], aqi_data), gradient[1].call(x[0, 0], x[1, 0], aqi_data)])
 
@@ -226,13 +184,15 @@ while iteration < 15 do
 
     xn = x - delta_x
 
+    llv = Weib.loglikelihood(x[0, 0], x[1, 0], aqi_data)
+
     llv_next = Weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
 
     step_size = 1
 
     while llv_next < llv do
 
-        step_size /= 2
+        step_size /= 2.0
 
         xn = x - step_size * delta_x
 
@@ -240,11 +200,56 @@ while iteration < 15 do
 
     end
 
-    puts "Iteration: #{iteration}, LLVN: #{llv_next}"
-    puts "Gra: #{gradient_val}, H: #{hessian_val}"
-    puts "X(k+1): #{xn}"
+    iteration = 1
+
+    puts "Iteration: #{iteration}, LLVN: #{llv_next}, Step Size: #{step_size}"
+    # puts "Gra: #{gradient_val}, H: #{hessian_val}"
+    # puts "X(k+1): #{xn}"
+
+    while Math.fabs(x[0,0] - xn[0,0]) > 10e-6 || Math.fabs(x[1,0] - xn[1, 0]) do 
+
+        iteration += 1
+
+        x = xn
+
+        llv = llv_next 
+
+        step_size = 1
+
+        gradient_val = Matrix.column_vector([gradient[0].call(x[0, 0], x[1, 0], aqi_data), gradient[1].call(x[0, 0], x[1, 0], aqi_data)])
+
+        hessian_val = Matrix[
+            [hessian_mat[0][0].call(x[0, 0], x[1, 0], aqi_data), hessian_mat[0][1].call(x[0, 0], x[1, 0], aqi_data)],
+            [hessian_mat[1][0].call(x[0, 0], x[1, 0], aqi_data), hessian_mat[1][1].call(x[0, 0], x[1, 0], aqi_data)]]
+
+        hessian_inv_val = hessian_val.inv
+
+        delta_x = hessian_inv_val * gradient_val
+
+        xn = x - delta_x
+
+        llv_next = Weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
+
+        step_size = 1
+
+        while llv_next < llv do
+
+            step_size /= 2.0
+
+            xn = x - step_size * delta_x
+
+            llv_next = Weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
+
+        end
+
+        puts "Iteration: #{iteration}, LLVN: #{llv_next}, Step Size: #{step_size}"
+        # puts "Gra: #{gradient_val}, H: #{hessian_val}"
+        # puts "X(k+1): #{xn}"
+
+    end
+
+    puts xn
 
 end
 
-
-print xn
+run_case
