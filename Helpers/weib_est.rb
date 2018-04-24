@@ -163,10 +163,7 @@ def run_case()
 
     end
 
-    # Weib.estimate aqi_data
-    # print Weib.loglikelihoodOpt 1, 1, aqi_data
-
-    x = Matrix.column_vector([100, 100])
+    x = Matrix.column_vector([1, 1])
 
     gradient = Weib.gradient
 
@@ -202,11 +199,14 @@ def run_case()
 
     iteration = 1
 
+    puts "Iteration: 0, LLV: #{llv}"
+
     puts "Iteration: #{iteration}, LLVN: #{llv_next}, Step Size: #{step_size}"
     # puts "Gra: #{gradient_val}, H: #{hessian_val}"
-    # puts "X(k+1): #{xn}"
+    puts "X(k+1): #{xn}"
 
-    while Math.fabs(x[0,0] - xn[0,0]) > 10e-6 || Math.fabs(x[1,0] - xn[1, 0]) do 
+    # while iteration < 10 do
+    while (x[0,0] - xn[0,0]).abs > 10e-6 || (x[1,0] - xn[1, 0]).abs > 10e-6 do 
 
         iteration += 1
 
@@ -244,7 +244,7 @@ def run_case()
 
         puts "Iteration: #{iteration}, LLVN: #{llv_next}, Step Size: #{step_size}"
         # puts "Gra: #{gradient_val}, H: #{hessian_val}"
-        # puts "X(k+1): #{xn}"
+        puts "X(k+1): #{xn}"
 
     end
 

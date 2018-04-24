@@ -1,6 +1,6 @@
 % X = linspace(-100,100,10);
 
-data_source = dlmread("../csv_data/BetaSynData5K.csv", ",", 1, 0);
+data_source = dlmread("../../csv_data/BetaSynData5K.csv", ",", 1, 0);
 
 % disp(length(data_source));
 
@@ -23,4 +23,4 @@ ZZ = dataLen * (gammaln(XX + YY) - gammaln(XX) - gammaln(YY)) + (XX - 1) * logSu
 figure;
 hold on;
 mesh(XX, YY, ZZ);
-text(X(r), Y(c), mxVal, sprintf("(%f,%f,%f)", X(r), Y(c), mxVal));
+text(X(c), Y(r), mxVal, sprintf("(%f,%f,%f)", X(c), Y(r), mxVal));
