@@ -121,7 +121,7 @@ class Weib:
 
 def run_case():
 
-    file = open('../../csv_data/AQI.csv')
+    file = open('../csv_data/AQI.csv')
 
     data_iter = csv.reader(file)
 
@@ -176,7 +176,8 @@ def run_case():
     # print("Gra: ", gradient_val.flatten(), ", H: ", hessian_inv_val.flatten())
     # print("X(k+1): ", xn.flatten())
 
-    while math.fabs(x[0, 0] - xn[0,0]) > 10e-6 or math.fabs(x[1,0] - xn[1,0]) > 10e-6:
+    while math.fabs(gradient_val[0, 0]) > 10e-14 or math.fabs(gradient[1, 0]) > 10e-14:
+    # while math.fabs(x[0, 0] - xn[0,0]) > 10e-6 or math.fabs(x[1,0] - xn[1,0]) > 10e-6:
 
         iteration += 1
 

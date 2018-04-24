@@ -203,9 +203,10 @@ def run_case()
 
     puts "Iteration: #{iteration}, LLVN: #{llv_next}, Step Size: #{step_size}"
     # puts "Gra: #{gradient_val}, H: #{hessian_val}"
-    puts "X(k+1): #{xn}"
+    # puts "X(k+1): #{xn}"
 
     # while iteration < 10 do
+    # while gradient_val[0, 0].abs > 0 || gradient_val[1, 1].abs > 0 do
     while (x[0,0] - xn[0,0]).abs > 10e-6 || (x[1,0] - xn[1, 0]).abs > 10e-6 do 
 
         iteration += 1
@@ -244,7 +245,7 @@ def run_case()
 
         puts "Iteration: #{iteration}, LLVN: #{llv_next}, Step Size: #{step_size}"
         # puts "Gra: #{gradient_val}, H: #{hessian_val}"
-        puts "X(k+1): #{xn}"
+        # puts "X(k+1): #{xn}"
 
     end
 
