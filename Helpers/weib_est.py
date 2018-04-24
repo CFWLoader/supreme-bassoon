@@ -119,9 +119,9 @@ class Weib:
         return [[h11, h12], [h21, h22]]
 
 
-def run_case():
+def optimization_case():
 
-    file = open('../csv_data/AQI.csv')
+    file = open('../../csv_data/AQI.csv')
 
     data_iter = csv.reader(file)
 
@@ -135,7 +135,7 @@ def run_case():
 
     weib = Weib()
 
-    x = np.array([[1], [1]])
+    x = np.array([[70], [2]])
 
     gradient = weib.gradient()
 
@@ -176,8 +176,8 @@ def run_case():
     # print("Gra: ", gradient_val.flatten(), ", H: ", hessian_inv_val.flatten())
     # print("X(k+1): ", xn.flatten())
 
-    while math.fabs(gradient_val[0, 0]) > 10e-14 or math.fabs(gradient[1, 0]) > 10e-14:
-    # while math.fabs(x[0, 0] - xn[0,0]) > 10e-6 or math.fabs(x[1,0] - xn[1,0]) > 10e-6:
+    # while math.fabs(gradient_val[0, 0]) > 10e-14 or math.fabs(gradient[1, 0]) > 10e-14:
+    while iteration < 20:
 
         iteration += 1
 
@@ -213,12 +213,49 @@ def run_case():
 
             llv_next = weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
 
-        print("Iteration: %d, LLVN: %f, Step Size: %f" %
+        print("Iteration: %d, LLVN: %lf, Step Size: %lf" %
               (iteration, llv_next, step_size))
-        # print("Gra: ", gradient_val.flatten(),
-        #       ", H: ", hessian_inv_val.flatten())
-        # print("X(k+1): ", xn.flatten())
+        print("Gra: ", gradient_val.flatten(),
+              ", H: ", hessian_inv_val.flatten())
+        print("X(k+1): ", xn.flatten())
 
     print(xn)
 
-run_case()
+def bfgs_case():
+
+    file = open('../../csv_data/AQI.csv')
+
+    data_iter = csv.reader(file)
+
+    aqi_data = []
+
+    next(data_iter)     # Skip header.
+
+    for row in data_iter:
+
+        aqi_data.append(float(row[0]))
+
+    weib = Weib()
+
+    # Start BFGS.
+    gradient_fun = weib.gradient()
+
+    thetak_m1 = np.array([[1], [1]])
+
+    gk_m1 = np.array([[gradient_fun[0](thetak_m1[0, 0], thetak_m1[1, 0], aqi_data)], [gradient_fun[1](thetak_m1[0, 0], thetak_m1[1, 0], aqi_data)]])
+
+    bk_m1 = np.array([[1, 0], [0, 1]])
+
+    delta_theta = np.matmul(np.linalg.inv(bk_m1), gk_m1)
+
+    llv = weib.loglikelihood(thetak_m1[0, 0], thetak_m1[1, 0], aqi_data)
+
+    thetak = thetak_m1 - delta_theta
+
+    llvn = weib.loglikelihood(thetak[0, 0], thetak[1, 0], aqi_data)
+
+    print(llvn)
+
+# optimization_case()
+
+bfgs_case()
