@@ -121,7 +121,7 @@ class Weib:
 
 def optimization_case():
 
-    file = open('../../csv_data/AQI.csv')
+    file = open('../csv_data/AQI.csv')
 
     data_iter = csv.reader(file)
 
@@ -135,7 +135,8 @@ def optimization_case():
 
     weib = Weib()
 
-    x = np.array([[70], [2]])
+    x = np.array([[1], [1]])
+    # x = np.array([[127.63903804], [1.99202476]])
 
     gradient = weib.gradient()
 
@@ -169,15 +170,36 @@ def optimization_case():
 
         llv_next = weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
 
+        # print("LLVN: %lf, Step Size: %lf" %(llv_next, step_size))
+
+    step_size /= 2
+
+    xn_opt = x - step_size * delta_x
+
+    llv_next_opt = weib.loglikelihood(xn_opt[0, 0], xn_opt[1, 0], aqi_data)
+
+    # Although we have found a optimal value, we can still find a more optimal value by proceeding step halving.
+    while llv_next_opt > llv_next:
+
+        step_size /= 2
+
+        llv_next = llv_next_opt
+
+        xn = xn_opt
+
+        xn_opt = x - step_size * delta_x
+
+        llv_next_opt = weib.loglikelihood(xn_opt[0, 0], xn_opt[1, 0], aqi_data)
+
     iteration = 1
 
     print("Iteration: %d, LLVN: %f, Step Size: %f" %
           (iteration, llv_next, step_size))
-    # print("Gra: ", gradient_val.flatten(), ", H: ", hessian_inv_val.flatten())
-    # print("X(k+1): ", xn.flatten())
+    print("Gra: ", gradient_val.flatten(), ", H: ", hessian_inv_val.flatten())
+    print("Delta: ", delta_x.flatten(), " X(k+1): ", xn.flatten())
 
     # while math.fabs(gradient_val[0, 0]) > 10e-14 or math.fabs(gradient[1, 0]) > 10e-14:
-    while iteration < 20:
+    while iteration < 15:
 
         iteration += 1
 
@@ -213,11 +235,47 @@ def optimization_case():
 
             llv_next = weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
 
+        step_size /= 2
+
+        xn_opt = x - step_size * delta_x
+
+        llv_next_opt = weib.loglikelihood(xn_opt[0, 0], xn_opt[1, 0], aqi_data)
+
+        while llv_next_opt > llv_next:
+
+            step_size /= 2
+
+            llv_next = llv_next_opt
+
+            xn = xn_opt
+
+            xn_opt = x - step_size * delta_x
+
+            llv_next_opt = weib.loglikelihood(xn_opt[0, 0], xn_opt[1, 0], aqi_data)
+
+        # if np.array_equal(x, xn):
+
+        #     # raise Exception('Couldn\'t decend')
+
+        #     xn = x + delta_x
+
+        #     llv_next = weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
+
+        #     step_size = 1
+
+        #     while llv_next < llv:
+
+        #         step_size /= 2.0
+
+        #         xn = x + step_size * delta_x
+
+        #         llv_next = weib.loglikelihood(xn[0, 0], xn[1, 0], aqi_data)
+
         print("Iteration: %d, LLVN: %lf, Step Size: %lf" %
               (iteration, llv_next, step_size))
         print("Gra: ", gradient_val.flatten(),
               ", H: ", hessian_inv_val.flatten())
-        print("X(k+1): ", xn.flatten())
+        print("Delta: ", delta_x.flatten(), " X(k+1): ", xn.flatten())
 
     print(xn)
 
@@ -256,6 +314,6 @@ def bfgs_case():
 
     print(llvn)
 
-# optimization_case()
+optimization_case()
 
-bfgs_case()
+# bfgs_case()

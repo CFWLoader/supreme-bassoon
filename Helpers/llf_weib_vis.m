@@ -14,8 +14,9 @@ endfunction
 
 dataLen = length(data_source);
 
-X = linspace(70, 130, 30);
-Y = linspace(2, 3, 20);
+
+X = linspace(127.6, 127.7, 30);
+Y = linspace(1.9, 2.0, 30);
 
 xlen = length(X);
 ylen = length(Y);
@@ -70,6 +71,6 @@ zlabel('Log Likelihood');
 
 mxx = X(c);
 mxy = Y(r);
-mxz = mxVal + 100;
+mxz = mxVal;
 
 text(mxx, mxy, mxz, sprintf("B: %f, G: %f, LL: %f", mxx, mxy, mxz));
