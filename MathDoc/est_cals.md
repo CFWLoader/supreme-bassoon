@@ -23,10 +23,31 @@ $$
 ### Log-Likelihood Function
 
 $$
-\ell(a, b; X) = Nln(a) + Nln(b) + (a-1)\sum_{i=1}^N ln(x_i) + (b - 1)\sum_{i=1}^N ln(1-x^a)
+\ell(a, b; X) = Nln(a) + Nln(b) + (a-1)\sum_{i=1}^N ln(x_i) + (b - 1)\sum_{i=1}^N ln(1-x_i^a)
 $$
 
-Another Method: [Maximum Spacing Estimation](https://en.wikipedia.org/wiki/Maximum_spacing_estimation)
+### First Derivatives
+
+$$
+\begin{align}
+\frac{\partial \ell}{\partial a} & = \frac{N}{a} + \sum_{i=1}^N ln(x_i) - (b - 1) \sum_{i=1}^N \frac{x_i^a lnx_i}{1-x_i^a} \\
+\frac{\partial \ell}{\partial b} & = \frac{N}{b} + \sum_{i=1}^N ln(1-x_i^a)
+\end{align}
+$$
+
+### Second Derivatives
+
+$$
+\begin{align}
+\frac{\partial \ell^2}{\partial^2 a} & = - \frac{N}{a^2} - (b -1) \sum_{i=1}^N x_i^a (\frac{ln^2x_i}{1-x_i^a})^2 \\
+
+\frac{\partial \ell^2}{\partial a \partial b} & = \frac{\partial \ell^2}{\partial b \partial a} = - \sum_{i=1}^{N} \frac{x_i^a lnx_i}{1-x_i^a} \\
+
+\frac{\partial \ell^2}{\partial^2 b} & = -\frac{N}{b^2}
+\end{align}
+$$
+
+A [paper](https://www.tandfonline.com/doi/abs/10.1080/03610918.2014.957840) metioned [Maximum Spacing Estimation](https://en.wikipedia.org/wiki/Maximum_spacing_estimation) has better performance than MLE.
 
 ## MLE for Pareto Type I
 
