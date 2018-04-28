@@ -39,7 +39,7 @@ $$
 
 $$
 \begin{align}
-\frac{\partial \ell^2}{\partial^2 a} & = - \frac{N}{a^2} - (b -1) \sum_{i=1}^N x_i^a (\frac{ln^2x_i}{1-x_i^a})^2 \\
+\frac{\partial \ell^2}{\partial^2 a} & = - \frac{N}{a^2} - (b -1) \sum_{i=1}^N x_i^a (\frac{lnx_i}{1-x_i^a})^2 \\
 
 \frac{\partial \ell^2}{\partial a \partial b} & = \frac{\partial \ell^2}{\partial b \partial a} = - \sum_{i=1}^{N} \frac{x_i^a lnx_i}{1-x_i^a} \\
 
