@@ -123,3 +123,129 @@ c_k = \hat{\gamma}_k = \frac{1}{N} \sum_{t=1}^{N-k} (z_t-\bar{z})(z_{t+k}-\bar{z
 $$
 
 ### Standard Errors of Autocorrelation Estimates
+
+$$
+var(r_k) \approx \frac{1}{N} \sum_{v=-\infty}^{\infty} (\rho_v^2 + \rho_{v+k}\rho_{v-k}-4\rho_v\rho_k\rho_{v-k} + 2\rho_v^2\rho_k^2)
+$$
+
+### Periodogram of a Time Series，时间序列的周期性
+
+一般考虑用傅里叶级数模型，假设$N=2q+1$：
+
+$$
+\begin{align}
+& z_t = \alpha_0 + \sum_{i=1}^{q}(\alpha_i c_{it} + \beta_i s_{it}) + e_i \\
+& c_{it} = cos(2\pi f_i t), s_{it} = sin(2\pi f_i t), f_i = \frac{i}{N}
+\end{align}
+$$
+
+其中$f_i = \frac{i}{N}$为频率，为基频（fundamental frequency）$\frac{1}{N}$的谐波（harmonics）。
+
+通过[最小二乘法](https://en.wikipedia.org/wiki/Least_squares)估计参数$\alpha_0, \alpha_i, \beta_i$：
+
+$$
+\begin{align}
+& a_0 = \bar{z} \\
+& a_i = \frac{2}{N} \sum_{t=1}^{N} z_t c_{it} \\
+& b_i = \frac{2}{N} \sum_{t=1}^{N} z_t s_{it} \\
+& \sum_{t=1}^{N} c_{it}^2 = \sum_{t=1}^{N} s_{it}^2 = \frac{N}{2}
+\end{align}
+$$
+
+频率$f_i$下的强度（Intensity）$I(f_i)$：
+
+$$
+I(f_i) = \frac{N}{2} (a_i^2 + b_i^2) ~~~~~~~~~~~~~~ i = 1,2,...,q
+$$
+
+当$N=2q$时，有：
+
+$$
+\begin{align}
+& a_q = \frac{1}{N} \sum_{t=1}^{N}(-1)^t z_t \\
+& b_q = 0 \\
+& I(f_q) = I(0.5) = Na_q^2
+\end{align}
+$$
+
+`周期性`下的方差分析：
+
+$$
+\sum_{t=1}^{N} (z_t - \bar{z})^2 = \sum_{i=1}^{q} I(f_i)
+$$
+
+### Spectrum and Spectral Density Function，频谱与频谱密度函数
+
+若放宽频率的条件设定其值域为$[0, \frac{1}{2}]$，则`样本谱`（Sample Spectrum）可以表示为：
+
+$$
+I(f) = 2 [ c_0 + 2 \sum_{k=1}^{N-1} c_k cos(2\pi fk) ] ~~~~~~~~~ 0 \leq f \leq \frac{1}{N}
+$$
+
+多次采样后可得：
+
+$$
+E[I(f)] = 2 [ E[c_0] + 2 \sum_{k=1}^{N-1} E[c_k] cos(2\pi fk) ]
+$$
+
+当$N$趋向无穷大时：
+
+$$
+\lim_{N \to \infty} E[c_k] = \gamma_k
+$$
+
+功率谱（Power Spectrum）：
+
+$$
+p(f) = E[I(f)] = 2 [ \gamma_0 + 2 \sum_{k=1}^{N-1} \gamma_k cos(2\pi fk) ]
+$$
+
+$$
+\begin{align}
+|p(f)| & \leq 2 [ |\gamma_0| + 2 \sum_{k=1}^{N-1} |\gamma_k| |cos(2\pi fk)| ] \\
+& \leq 2 [ |\gamma_0| + 2 \sum_{k=1}^{N-1} |\gamma_k| ]
+\end{align}
+$$
+
+<font color="orange">Since the power spectrum is the Fourier cosine transform of the autocovariance function, knowledge of the autocovariance function is mathematically equivalent to knowledge of the spectrum, and vice versa.</font>
+
+$$
+\begin{align}
+\gamma_0 & = \sigma_z^2 = \int_0^{\frac{1}{2}} p(f) df \\
+\gamma_k & = \int_0^{\frac{1}{2}} cos(2\pi fk)p(f) df
+\end{align}
+$$
+
+`谱密度函数`（Spectral Density Function）：
+
+$$
+\begin{align}
+g(f) & = \frac{p(f)}{\sigma_z^2} \\
+& = 2 [ 1 + 2 \sum_{k=1}^{\infty} \rho_k |cos(2\pi fk)| ] ~~~~~~~~~ 0 \leq f \leq \frac{1}{2}
+\end{align}
+$$
+
+该函数有如下性质：
+
+$$
+\int_0^{\frac{1}{2}} g(f) df = 1
+$$
+
+### Estimation of the Spectrum，频谱估计
+
+`平滑估计`（Smoothed Estimate）：
+
+$$
+p(f) = 2 [ c_0 + 2 \sum_{k=1}^{N-1} \lambda_k c_k cos(2\pi fk) ]
+$$
+
+其中$\lambda_k$为`滞后窗口`（Lag Window）。
+
+`平滑周期估计`（Smoothed Periodogram Estimator）：
+
+$$
+\hat{p}(f) = \sum_{j=-m}^{m} W(f_i) I(f_i + \frac{j}{N})
+$$
+
+其中$\sum_{j=-m}^{m} W(f_i) = 1$，称为`频谱窗口`（Spectral Window），注意$m$要远小于$N/2$。
+
