@@ -84,3 +84,42 @@ $$
     \end{matrix}
 \right] = \sigma_z^2 \mathbf{P}_n
 $$
+
+如果过程是`平稳的`，则充要条件是`自协方差矩阵`是`正定的`。
+
+### Estimation of Autocovariance and Autocorrelation Functions
+
+设样本的均值为$\bar{z}$，则：
+
+$$
+\bar{z} = \frac{1}{N} \sum_{t=1}{N} z_t
+$$
+
+易知$E(\bar{z}) = \mu$，即为总体均值的无偏估计。而$\bar{z}$的精度则由其方差来测量：
+
+$$
+var(\bar{z}) = \frac{1}{N} \sum_{t=1}^N \sum_{s=1}^{N} \gamma_{t-s} = \frac{\gamma_0}{N} [1+2\sum_{k=1}^{N-1}(1-\frac{k}{N})\rho_k]
+$$
+
+当$N$足够大时：
+
+$$
+\begin{align}
+var(\bar{z}) = \frac{\gamma_0}{N} [1+2\sum_{k=1}^{N-1}\rho_k] \\
+Nvar(\bar{z}) = \gamma_0[1+2\sum_{k=1}^{\infty}\rho_k]
+\end{align}
+$$
+
+从样本中求得相关系数：
+
+$$
+r_k = \hat{\rho}_k = \frac{c_k}{c_0}
+$$
+
+其中：
+
+$$
+c_k = \hat{\gamma}_k = \frac{1}{N} \sum_{t=1}^{N-k} (z_t-\bar{z})(z_{t+k}-\bar{z}) ~~~~~~ k = 0, 1, 2, ..., K
+$$
+
+### Standard Errors of Autocorrelation Estimates
