@@ -312,3 +312,14 @@ Y_t & = v(B)X_t + \psi(B)a_t \\
 & = \delta^{-1}(B)\Omega(B)X_t + \phi^{-1}(B)\theta(B)a_t
 \end{align}
 $$
+
+### Models for Discrete Control System
+
+输出值$Y_t$与目标值$T$之间的误差$\epsilon_t$：
+
+$$
+\begin{align}
+\epsilon_t & = Y_t - T \\
+& = v(B)X_t + N_t - T
+\end{align}
+$$
