@@ -4,7 +4,7 @@ set "loc7z=C:\Program Files\7-Zip\7z.exe"
 
 REM @echo on
 
-set "target_dir=%~dp0"
+set "target_dir=%~dp1"
 
 set "target_name=%~n1"
 
