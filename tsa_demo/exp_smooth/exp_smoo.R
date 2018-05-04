@@ -10,22 +10,22 @@ smoothed_value <- 139.8
 
 # prd_past[1] <- alpha * obs_past[1] + (1 - alpha) * init_level
 
-# for(idx in c(1:(length(obs_past) - 1)))
-# {
-#     prd_past[idx + 1] <- alpha * obs_past[idx + 1] + (1 - alpha) * prd_past[idx]
-# }
-
-# print(prd_past)
-
-prd_len <- length(obs_prd)
-
-prd_vls <- rep(length = prd_len, 0)
-
-prd_vls[1] <- alpha * obs_prd[1] + (1 - alpha) * smoothed_value
-
-for(idx in c(2:prd_len))
+for(idx in c(1:(length(obs_past) - 1)))
 {
-    prd_vls[idx] <- alpha * prd_vls[idx - 1] + (1 - alpha) * obs_prd[idx - 1]
+    prd_past[idx + 1] <- alpha * obs_past[idx + 1] + (1 - alpha) * prd_past[idx]
 }
 
-print(prd_vls)
+print(prd_past)
+
+# prd_len <- length(obs_prd)
+
+# prd_vls <- rep(length = prd_len, 0)
+
+# prd_vls[1] <- alpha * obs_prd[1] + (1 - alpha) * smoothed_value
+
+# for(idx in c(2:prd_len))
+# {
+#     prd_vls[idx] <- alpha * prd_vls[idx - 1] + (1 - alpha) * obs_prd[idx - 1]
+# }
+
+# print(prd_vls)
