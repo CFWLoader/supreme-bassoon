@@ -1,11 +1,12 @@
 library(ggplot2)
 
-source("./lib/bp_regress.R")
-
 # Set working dir to this file's path.
 script.dir = dirname(sys.frame(1)$ofile)
 
 setwd(script.dir)
+
+# Load Library.
+source("./lib/bp_regress.R")
 
 training_set = read.csv("../datasets/RegressionData.txt", header = FALSE, sep = " ")
 
@@ -13,6 +14,7 @@ ones_vec = rep(1, times = nrow(training_set));
 
 # ones_vec[] = 1
 
+# Qestion A.
 x_mat = matrix(c(training_set$V1, ones_vec), ncol = 2)
 
 y_t = as.numeric(training_set$V2)
@@ -67,3 +69,45 @@ err.dframe = data.frame(
 ggplot(err.dframe, aes(x = iteration, y = error_rate)) + geom_point(color = "blue")
 
 ggsave("./e3-2a.png")
+
+# Question B.
+hidden_weights <- weights[[1]]
+
+# print(hidden_weights)
+
+hidden_out_df <- NULL
+
+label.vec <- c()
+
+for(widx in c(1:ncol(hidden_weights)))
+{
+    y_vals = c()
+
+    for(xidx in c(1:nrow(x_mat)))
+    {
+        y_vals = c(y_vals, x_mat[xidx,] %*% hidden_weights[, widx])
+    }
+
+    label.vec <- c(label.vec, paste("W=", hidden_weights[1, widx], "\nB=", hidden_weights[2, widx], sep = ""))
+
+    hidden_out_df <- rbind(hidden_out_df, data.frame(x = x_mat[,1], y = y_vals, grp_id = widx))
+}
+
+# print(hidden_out_df)
+
+ggplot(hidden_out_df, aes(x = x, y = y, color = as.factor(grp_id))) + geom_point() + labs(color = "Hidden Unit") + scale_color_manual(values = rainbow(ncol(hidden_weights)), labels = label.vec)
+
+ggsave("./e3-2b.png")
+
+# Question C.
+
+final.outputs <- layer_outputs[[2]]
+
+f.out.df <- data.frame(x = x_mat[,1], y = final.outputs, grp_id = 1)
+
+f.out.df <- rbind(f.out.df, data.frame(x = x_mat[,1], y = y_t, grp_id = 2))
+
+ggplot(f.out.df, aes(x = x, y = y, color = as.factor(grp_id), shape = as.factor(grp_id))) + geom_point() + 
+    scale_color_manual(values = c("red", "blue"), labels = c("Predict", "Train")) + labs(color = "Source", shape = "Source")
+
+ggsave("./e3-2c.png")
