@@ -10,7 +10,9 @@ broadband1baseline <- read.csv("../broadband_1_m1_an_bl.csv")
 
 bbm1 <- as.numeric(broadband1$Market_1)
 
-bbm1bl <- as.numeric(broadband1baseline$Market_1)[c(1:length(bbm1))]
+bbm1bl <- as.numeric(broadband1baseline$X.Market_1)[c(1:length(bbm1))]
+
+# print(bbm1bl)
 
 data.len <- length(bbm1)
 
@@ -48,6 +50,8 @@ for(prd in c(2:length(bbm1)))
 
     x.prd.vec <- c(x.prd.vec, sv + trend)
 }
+
+print(x.prd.vec)
 
 # print(sv.vec[data.len])
 
@@ -117,15 +121,48 @@ for(prd in c(2:length(bbm1)))
 }
 
 # print(rev(x.bkw.vec2))
+
+# Back 3.
+# sv.bkw.vec3 <- vector(length = data.len)
+
+# trend.bkw.vec3 <- vector(length = data.len)
+
+# x.bkw.vec3 <- vector(length = data.len)
+
+# sv.bkw.vec3[data.len] <- al_sv
+
+# trend.bkw.vec3[data.len] <- gam_sv
+
+# # sv.bkw.vec3[data.len] <- sv.vec[data.len]
+
+# # trend.bkw.vec3[data.len] <- trend.vec[data.len]
+
+# x.bkw.vec3[data.len] <- sv.bkw.vec3[data.len] + trend.bkw.vec3[data.len]
+
+# for(prd in c(data.len:2))
+# {
+#     tmp.val <- (sv.bkw.vec3[prd] - alpha * bbm1[prd])/(1 - alpha)
+
+#     trend.bkw.vec3[prd - 1] <- trend.bkw.vec3[prd] - gamm * sv.bkw.vec3[prd] + gamm * tmp.val
+
+#     sv.bkw.vec3[prd - 1] <- (1 - gamm) * tmp.val - trend.bkw.vec3[prd] + gamm * sv.bkw.vec3[prd]
+
+#     x.bkw.vec3[prd - 1] <- sv.bkw.vec3[prd - 1] + trend.bkw.vec3[prd - 1]
+# }
+
+# print(x.bkw.vec3)
+
 plot.df <- NULL
 
 plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = x.prd.vec, grp = "R.FW"))
 
-plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = x.bkw.vec1, grp = "R.BW1"))
+# plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = x.bkw.vec1, grp = "R.BW1"))
 
-plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = rev(x.bkw.vec2), grp = "R.BW2"))
+# plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = rev(x.bkw.vec2), grp = "R.BW2"))
 
-plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = bbm1, grp = "ORG"))
+# plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = bbm1, grp = "ORG"))
+
+plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = bbm1bl, grp = "MODLER"))
 
 plot.obj <- ggplot(plot.df, aes(x = x, y = y, group = as.factor(grp), color = as.factor(grp), shape = as.factor(grp))) + 
     geom_line()
