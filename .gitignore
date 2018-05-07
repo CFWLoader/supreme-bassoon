@@ -102,3 +102,9 @@ ENV/
 
 # Charts
 *.png
+
+# Data
+*.csv
+
+# Models
+*.pmml
