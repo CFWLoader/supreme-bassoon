@@ -46,3 +46,5 @@ for(prd in c(2:length(bbm1)))
 }
 
 print(x.prd.vec)
+
+# print(all.equal(bbm1bl, x.prd.vec))
