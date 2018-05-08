@@ -59,26 +59,27 @@ exp_sm_family.na <- function(alpha, init_level, delta, season.init_levels, obser
 
     forecast.vec <- c(sm.vec[1] + seas.vec[1])
 
-    iter.end = 2 * season.period + 1
+    iter.end = data.len
 
     for(prd in c(2:iter.end))
     {
-        if(prd - 1 <= season.period)
+        seas.prd <- prd - 1
+        if(seas.prd <= season.period)
         {
-            sm.val <- alpha * (observed[prd - 1] - seas.vec[prd - 1]) + (1 - alpha) * sm.vec[prd - 1]
+            sm.val <- alpha * (observed[prd - 1] - seas.vec[seas.prd]) + (1 - alpha) * sm.vec[prd - 1]
             seas.val <- seas.vec[prd]
         }
         else{
-            sm.val <- alpha * (observed[prd - 1] - seas.vec[prd - 1 - season.period]) + (1 - alpha) * sm.vec[prd - 1]
-            seas.val <- delta * (observed[prd - 1] - sm.val) + (1 - delta) * seas.vec[prd - 1 - season.period]
+            sm.val <- alpha * (observed[prd - 1] - seas.vec[seas.prd - season.period]) + (1 - alpha) * sm.vec[prd - 1]
+            seas.val <- delta * (observed[prd - 1] - sm.val) + (1 - delta) * seas.vec[seas.prd - season.period]
         }
 
         sm.vec <- c(sm.vec, sm.val)
 
-        if(prd >= season.period)
-        {
+        if(seas.prd > season.period)
+        {   
             seas.vec <- c(seas.vec, seas.val)
-            forecast.vec <- c(forecast.vec, sm.val + seas.vec[prd - season.period])
+            forecast.vec <- c(forecast.vec, sm.val + seas.vec[seas.prd + 1 - season.period])
         }
         else
         {
@@ -86,7 +87,7 @@ exp_sm_family.na <- function(alpha, init_level, delta, season.init_levels, obser
         }
     }
 
-    print(seas.vec)
+    # print(seas.vec)
 
     return(forecast.vec)
 }
