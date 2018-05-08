@@ -51,10 +51,10 @@ $$
 $$
 \begin{matrix}
 R下标 & 1 & 2 & 3 & ... & T \\
-平滑值 & s_0 & s_1 & s_2 & ... & s_T \\
-趋势值 & trn_0 & trn_1 & trn_2 & ... & trn_T \\
+平滑值 & s_0 & s_1 & s_2 & ... & s_{T-1} \\
+趋势值 & trn_0 & trn_1 & trn_2 & ... & trn_{T-1} \\
 观测值 & X_1 & X_2 & X_3 & ... & X_T \\
-预测值（m=1） &  \hat{X}_{1} = s_0 + trn_0 & \hat{X}_{2} = s_1 + trn_1 & \hat{X}_{3} = s_2 + trn_2 & ... & \hat{X}_{T+1} = s_T + trn_T
+预测值（m=1） &  \hat{X}_{1} = s_0 + trn_0 & \hat{X}_{2} = s_1 + trn_1 & \hat{X}_{3} = s_2 + trn_2 & ... & \hat{X}_{T} = s_{T-1} + trn_{T-1}
 \end{matrix}
 $$
 
