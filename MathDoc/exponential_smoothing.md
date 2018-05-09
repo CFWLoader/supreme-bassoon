@@ -76,3 +76,28 @@ $$
 & S_{t-1} = (1 - \gamma)\frac{S_t - \alpha X_t}{1 - \alpha} - T_t + \gamma S_t
 \end{align}
 $$
+
+## NN参数推导
+
+根据$\hat{x}_t = s_{t-1} = \frac{s_t - \alpha X_t}{1 - \alpha}$：
+
+$$
+s_t = \alpha X_t + (1 - \alpha)(S_{t-1} + T_{t-1}) = \sum_{i=0}^{t-2} (1-\alpha)^{i}\alpha X_{t-i} + (1-\alpha)^{t-1} s_1
+$$
+
+或者：
+
+$$
+\begin{align}
+MSE & = \frac{1}{T} \sum_{t=1}^{T} (s_{t-1} - X_t)^2 \\
+& = \frac{1}{T} \sum_{t=1}^{T} (\frac{s_t - \alpha X_t}{1 - \alpha} - X_t)^2 \\
+& = \frac{1}{T} \sum_{t=1}^{T} (\frac{s_t - X_t}{1 - \alpha})^2 \\
+& = \frac{1}{(1 - \alpha)^2} \frac{1}{T} \sum_{t=1}^{T} (s_t - X_t)^2
+\end{align}
+$$
+
+根据此式推得：
+
+$$
+\frac{\partial MSE}{\partial \alpha} = \frac{2}{(1 - \alpha)^3} \frac{1}{T} \sum_{t=1}^{T} (s_t - X_t)^2
+$$

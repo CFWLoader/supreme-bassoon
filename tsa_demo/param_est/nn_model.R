@@ -22,11 +22,15 @@ init_level <- 11453.646871104995
 
 alpha.0 <- 0.1
 
-prd.int <- exp_sm_family.nn(alpha, init_level, men.obs)
+# prd.int <- exp_sm_family.nn(alpha, init_level, men.obs)
 
 # sm.tp1.0 <- men.obs[data.len]
 
-# prd.int <- exp_sm_family.nn.backward(alpha.0, sm.tp1.0, men.obs)
+prd.int.f <- exp_sm_family.nn(alpha, init_level, men.obs)
+
+prd.int <- exp_sm_family.nn.backward(alpha, sm.val, men.obs)
+
+print(sum((prd.int.f - men.obs)**2) / data.len)
 
 print(sum((prd.int - men.obs)**2) / data.len)
 
