@@ -29,6 +29,6 @@ season.init_levels <- c(
 
 res <- exp_sm_family.na(alpha, init_level, delta, season.init_levels, men.obs)
 
-print(res)
+# print(res)
 
-# print(all.equal(men.mod.na, res))
+print(all.equal(men.mod.na, res))

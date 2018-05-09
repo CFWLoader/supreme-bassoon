@@ -59,7 +59,7 @@ exp_sm_family.na <- function(alpha, init_level, delta, season.init_levels, obser
 
     forecast.vec <- c(sm.vec[1] + seas.vec[1])
 
-    iter.end = data.len
+    iter.end <- data.len
 
     for(prd in c(2:iter.end))
     {
@@ -68,6 +68,12 @@ exp_sm_family.na <- function(alpha, init_level, delta, season.init_levels, obser
         {
             sm.val <- alpha * (observed[prd - 1] - seas.vec[seas.prd]) + (1 - alpha) * sm.vec[prd - 1]
             seas.val <- seas.vec[prd]
+
+            # Add this case to avoid missing season values for period = season.peroid + 1.
+            if(prd == season.period + 1)
+            {
+                seas.val <- delta * (observed[prd - 1] - sm.val) + (1 - delta) * seas.vec[1]
+            }
         }
         else{
             sm.val <- alpha * (observed[prd - 1] - seas.vec[seas.prd - season.period]) + (1 - alpha) * sm.vec[prd - 1]
