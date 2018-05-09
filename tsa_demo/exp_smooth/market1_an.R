@@ -4,6 +4,8 @@ script.dir = dirname(sys.frame(1)$ofile)
 
 setwd(script.dir)
 
+source("./forecast/exp_sm_family.R")
+
 broadband1 <- read.csv("../broadband_1_m1.csv")
 
 broadband1baseline <- read.csv("../broadband_1_m1_an_bl.csv")
@@ -29,41 +31,7 @@ al_init_l <- 3635.858152488188
 gam_init_l <- 114.14177693746852
 
 # Forward calculation.
-sv.vec <- c(al_init_l)
-
-trend.vec <- c(gam_init_l)
-
-x.prd.vec <- c(sv.vec[1] + trend.vec[1])
-
-for(prd in c(2:length(bbm1)))
-{
-    sv <- alpha * bbm1[prd - 1] + (1 - alpha) * (sv.vec[prd - 1] + trend.vec[prd - 1])
-    # sv <- alpha * bbm1[prd] + (1 - alpha) * (sv.vec[prd - 1] + trend.vec[prd - 1])    
-
-    # print(paste("ITR=", prd, "  sv=", sv))
-
-    sv.vec <- c(sv.vec, sv)
-
-    trend <- gamm * (sv.vec[prd] - sv.vec[prd - 1]) + (1 - gamm) * trend.vec[prd - 1]
-
-    trend.vec <- c(trend.vec, trend)
-
-    x.prd.vec <- c(x.prd.vec, sv + trend)
-}
-
-print(x.prd.vec)
-
-# print(sv.vec[data.len])
-
-# print(al_sv)
-
-# print(trend.vec[data.len])
-
-# print(gam_sv)
-
-# print(x.prd.vec)
-
-# print(all.equal(bbm1bl, x.prd.vec))
+x.prd.vec <- exp_sm_family.an(alpha, al_init_l, gamm, gam_init_l, bbm1)
 
 # Backward calculation.
 sv.bkw.vec <- vector(length = data.len)
@@ -160,7 +128,7 @@ plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = x.prd.vec, grp = "R.
 
 # plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = rev(x.bkw.vec2), grp = "R.BW2"))
 
-# plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = bbm1, grp = "ORG"))
+plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = bbm1, grp = "OBS"))
 
 plot.df <- rbind(plot.df, data.frame(x = c(1:data.len), y = bbm1bl, grp = "MODLER"))
 

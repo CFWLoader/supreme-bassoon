@@ -49,6 +49,32 @@ exp_sm_family.nn.backward <- function(alpha, last_level, observed)
     return(backward.vec)
 }
 
+exp_sm_family.an <- function(alpha, init_level, gamma, trend_init, observed, forecast.steps = 0)
+{
+    data.len <- length(observed)
+
+    sm.vec <- c(init_level)
+
+    trend.vec <- c(trend_init)
+
+    forecast.vec <- (sm.vec[1] + trend.vec[1])
+
+    for(prd in c(2:data.len))
+    {
+        sm.val <- alpha * observed[prd - 1] + (1 - alpha) * (sm.vec[prd - 1] + trend.vec[prd - 1])
+
+        sm.vec <- c(sm.vec, sm.val)
+
+        trend.val <- gamma * (sm.vec[prd] - sm.vec[prd - 1]) + (1 - gamma) * trend.vec[prd - 1]
+
+        trend.vec <- c(trend.vec, trend.val)
+
+        forecast.vec <- c(forecast.vec, sm.vec[prd] + trend.vec[prd])
+    }
+
+    return(forecast.vec)
+}
+
 exp_sm_family.na <- function(alpha, init_level, delta, season.init_levels, observed, season.period = length(season.init_levels), forecast.steps = 0)
 {
     data.len <- length(observed)
