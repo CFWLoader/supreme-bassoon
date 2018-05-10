@@ -1,5 +1,15 @@
 # Parameters Estimation
 
+## Tricks
+
+When the first derivative is too difficult to be derived or to complex. We can use the definition of derivative:
+
+$$
+f'(x) = \frac{df(x)}{dx} = \frac{f(x + \Delta x) - f(x)}{\Delta x}
+$$
+
+where $\Delta x$ can be set small enough that we can accept.
+
 ## MLE for Kumaraswamy
 
 ### Probability Density Function
