@@ -38,11 +38,15 @@ exp_sm_family.nn.backward <- function(alpha, last_level, observed)
 
     backward.vec <- rep(length = data.len, 0)
 
-    backward.vec[data.len] <- (last_level - alpha * observed[data.len]) / (1 - alpha)
+    beta <- -alpha / (1 - alpha)
+
+    # backward.vec[data.len] <- (last_level - alpha * observed[data.len]) / (1 - alpha)
+    backward.vec[data.len] <- beta * observed[data.len] + (1 - beta) * last_level
 
     for(idx in c(data.len:2))
     {
-        st_1 <- (backward.vec[idx] - alpha * observed[idx - 1]) / (1 - alpha)
+        # st_1 <- (backward.vec[idx] - alpha * observed[idx - 1]) / (1 - alpha)
+        st_1 <- beta * observed[idx - 1] + (1 - beta) * backward.vec[idx]
         backward.vec[idx - 1] <- st_1
     }
 
