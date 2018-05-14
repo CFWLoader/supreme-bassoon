@@ -76,6 +76,18 @@ exp_sm_family.an <- function(alpha, init_level, gamma, trend_init, observed, for
         forecast.vec <- c(forecast.vec, sm.vec[prd] + trend.vec[prd])
     }
 
+    print(sm.vec[data.len])
+
+    print(trend.vec[data.len])
+
+    sm.val <- alpha * observed[data.len] + (1 - alpha) * (sm.vec[data.len] + trend.vec[data.len])
+
+    trend.val <- gamma * (sm.val - sm.vec[data.len]) + (1 - gamma) * trend.vec[data.len]
+
+    print(sm.val)
+
+    print(trend.val)
+
     return(forecast.vec)
 }
 

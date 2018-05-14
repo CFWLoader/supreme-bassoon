@@ -31,7 +31,11 @@ al_init_l <- 3635.858152488188
 gam_init_l <- 114.14177693746852
 
 # Forward calculation.
-x.prd.vec <- exp_sm_family.an(alpha, al_init_l, gamm, gam_init_l, bbm1)
+x.prd.vec <- exp_sm_family.an(alpha, al_init_l, gamm, gam_init_l, bbm1, 1)
+
+# print(x.prd.vec[length(bbm1)])
+
+# print(x.prd.vec[length(bbm1) - 1])
 
 # Backward calculation.
 sv.bkw.vec <- vector(length = data.len)
@@ -44,49 +48,49 @@ x.bkw.vec1 <- vector(length = data.len)
 
 # trend.bkw.vec[data.len] <- gam_sv
 
-sv.bkw.vec[data.len] <- sv.vec[data.len]
+# sv.bkw.vec[data.len] <- sv.vec[data.len]
 
-trend.bkw.vec[data.len] <- trend.vec[data.len]
+# trend.bkw.vec[data.len] <- trend.vec[data.len]
 
-x.bkw.vec1[data.len] <- sv.bkw.vec[data.len] + trend.bkw.vec[data.len]
+# x.bkw.vec1[data.len] <- sv.bkw.vec[data.len] + trend.bkw.vec[data.len]
 
-for(prd in c(data.len:2))
-{
-    sv.bkw <- alpha * bbm1[prd] + (1 - alpha) * (sv.bkw.vec[prd] + trend.bkw.vec[prd])
+# for(prd in c(data.len:2))
+# {
+#     sv.bkw <- alpha * bbm1[prd] + (1 - alpha) * (sv.bkw.vec[prd] + trend.bkw.vec[prd])
 
-    sv.bkw.vec[prd - 1] <- sv.bkw
+#     sv.bkw.vec[prd - 1] <- sv.bkw
 
-    trend.bkw <- gamm * (sv.vec[prd - 1] - sv.vec[prd]) + (1 - gamm) * trend.bkw.vec[prd]
+#     trend.bkw <- gamm * (sv.vec[prd - 1] - sv.vec[prd]) + (1 - gamm) * trend.bkw.vec[prd]
 
-    trend.bkw.vec[prd - 1] <- trend.bkw
+#     trend.bkw.vec[prd - 1] <- trend.bkw
 
-    x.bkw.vec1[prd - 1] <- sv.bkw + trend.bkw
-}
+#     x.bkw.vec1[prd - 1] <- sv.bkw + trend.bkw
+# }
 
 # Back 2.
-sv.bkw.vec2 <- c(sv.vec[data.len])
+# sv.bkw.vec2 <- c(sv.vec[data.len])
 
-trend.bkw.vec2 <- c(trend.vec[data.len])
+# trend.bkw.vec2 <- c(trend.vec[data.len])
 
-x.bkw.vec2 <- c(sv.bkw.vec2[1] + trend.bkw.vec2[1])
+# x.bkw.vec2 <- c(sv.bkw.vec2[1] + trend.bkw.vec2[1])
 
-bbm1.bkw <- rev(bbm1)
+# bbm1.bkw <- rev(bbm1)
 
-for(prd in c(2:length(bbm1)))
-{
-    sv.bkw2 <- alpha * bbm1.bkw[prd - 1] + (1 - alpha) * (sv.bkw.vec2[prd - 1] + trend.bkw.vec2[prd - 1])
-    # sv <- alpha * bbm1[prd] + (1 - alpha) * (sv.vec[prd - 1] + trend.vec[prd - 1])    
+# for(prd in c(2:length(bbm1)))
+# {
+#     sv.bkw2 <- alpha * bbm1.bkw[prd - 1] + (1 - alpha) * (sv.bkw.vec2[prd - 1] + trend.bkw.vec2[prd - 1])
+#     # sv <- alpha * bbm1[prd] + (1 - alpha) * (sv.vec[prd - 1] + trend.vec[prd - 1])    
 
-    # print(paste("ITR=", prd, "  sv=", sv))
+#     # print(paste("ITR=", prd, "  sv=", sv))
 
-    sv.bkw.vec2 <- c(sv.bkw.vec2, sv.bkw2)
+#     sv.bkw.vec2 <- c(sv.bkw.vec2, sv.bkw2)
 
-    trend.bkw2 <- gamm * (sv.bkw.vec2[prd] - sv.bkw.vec2[prd - 1]) + (1 - gamm) * trend.bkw.vec2[prd - 1]
+#     trend.bkw2 <- gamm * (sv.bkw.vec2[prd] - sv.bkw.vec2[prd - 1]) + (1 - gamm) * trend.bkw.vec2[prd - 1]
 
-    trend.bkw.vec2 <- c(trend.bkw.vec2, trend.bkw2)
+#     trend.bkw.vec2 <- c(trend.bkw.vec2, trend.bkw2)
 
-    x.bkw.vec2 <- c(x.bkw.vec2, sv.bkw2 + trend.bkw2)
-}
+#     x.bkw.vec2 <- c(x.bkw.vec2, sv.bkw2 + trend.bkw2)
+# }
 
 # print(rev(x.bkw.vec2))
 
