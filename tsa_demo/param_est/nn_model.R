@@ -1,4 +1,6 @@
-# library(smooth)
+library(smooth)
+
+options(digits=10)
 
 script.dir <- dirname(sys.frame(1)$ofile)
 
@@ -30,9 +32,10 @@ prd.int.f <- exp_sm_family.nn(alpha, init_level, men.obs)
 
 prd.int <- exp_sm_family.nn.backward(alpha, sm.val, men.obs)
 
-print(sum((prd.int.f - men.obs)**2) / data.len)
+# print(sum((prd.int.f - men.obs)**2) / data.len)
 
-print(sum((prd.int - men.obs)**2) / data.len)
+# print(sum((prd.int - men.obs)**2) / data.len)
 
-# print(es(men.obs, model = "ANN"))
+result = es(men.obs, model = "ANN")
+print(result$persistence)
 # print(es(men.obs, model = "ANN", silent = "none"))
