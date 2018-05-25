@@ -1,23 +1,22 @@
-import csv
+import statsmodels.api as statmod
+import pandas
+import os
 import json
 
-file = open('../csv_data/age_p.csv')
+script_dir = os.path.dirname(__file__)
 
-data_iter = csv.reader(file)
+file_loc = os.path.join(script_dir, "..", "..", "va_data", "catalog_seasfac_cus.csv")
 
-data = []
+seasfac_data = pandas.read_csv(file_loc)
 
-for row in data_iter:
+jsoned =  json.dumps(seasfac_data["print"].values.tolist())
 
-    data.append(float(row[0]))
+wri_file = open('./cata_print.json', 'w')
 
-# print(len(data))
-jsoned = json.dumps(data)
-
-wri_file = open('./age_p.js', 'w')
-
-wri_file.write('AgeP30K=')
+wri_file.write('printData=')
 
 wri_file.write(jsoned)
+
+wri_file.close()
 
 # print(jsoned)
