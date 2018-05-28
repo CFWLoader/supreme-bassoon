@@ -108,3 +108,8 @@ ENV/
 
 # Models
 *.pmml
+
+# VS Code Configuration
+.vscode/
+
+.gitignore
