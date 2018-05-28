@@ -8,20 +8,20 @@ train_set.df <- read.csv("../datasets/TrainingRidge.csv")
 
 validate_set.df <- read.csv("../datasets/ValidationRidge.csv")
 
-source("./lib/preprocess.R")
+# source("./lib/preprocess.R")
 
-# center_data.matrix <- function(mat)
-# {
-#     cols = ncol(mat)
-#     rows = nrow(mat)
-#     ret.mat <- matrix(nrow = rows, ncol = cols)
-#     for(row in c(1:rows))
-#     {
-#         mean.val <- mean(mat[row, ])
-#         ret.mat[row, ] <- mat[row, ] - mean.val
-#     }
-#     return(ret.mat)
-# }
+center_data.matrix <- function(mat)
+{
+    cols = ncol(mat)
+    rows = nrow(mat)
+    ret.mat <- matrix(nrow = rows, ncol = cols)
+    for(row in c(1:rows))
+    {
+        mean.val <- mean(mat[row, ])
+        ret.mat[row, ] <- mat[row, ] - mean.val
+    }
+    return(ret.mat)
+}
 
 train_x <- t(data.matrix(train_set.df[c(1, 2)]))
 
@@ -51,13 +51,13 @@ x_cov.eigenvectors <- x_cov.eigen$vectors
 # xxx2 <- matrix(x_cov.eigenvalue[valid.idx] * x_cov.eigenvectors[, valid.idx], ncol = 1)
 # print(all.equal(xxx1, xxx2))
 
-x_tilde <- t(x_cov.eigenvectors) %*% centered_x
+# x_tilde <- t(x_cov.eigenvectors) %*% centered_x
 
 eigenvalue.diag <- matrix(rep(0, sample.size**2), nrow = sample.size, ncol = sample.size)
 
-# print(str(eigenvalue.diag))
+diag(eigenvalue.diag) <- x_cov.eigenvalue**(-1/2)
 
-# diag(eigenvalue.diag) <- x_cov.eigenvalue
+# print(eigenvalue.diag)
 
 # print(all.equal(eigenvalue.diag, x_tilde %*% t(x_tilde)))
 
@@ -77,54 +77,58 @@ eigenvalue.diag <- matrix(rep(0, sample.size**2), nrow = sample.size, ncol = sam
 
 # print(str(eigenvalue.diag))
 
-# shpered_x <- eigenvalue.diag**(-1/2) %*% t(x_cov.eigenvectors) %*% centered_x
+shpered_x <- eigenvalue.diag %*% t(x_cov.eigenvectors) %*% centered_x
 
 # print(shpered_x)
 
-# origin.df <- data.frame(
-#     x1 = train_x[, 1],
-#     x2 = train_x[, 2],
-#     grp_id = 1
-# )
+train_x <- t(train_x)
+centered_x <- t(centered_x)
+shpered_x <- t(shpered_x)
 
-# origin.df <- rbind(origin.df, data.frame(
-#     x1 = mean(train_x[, 1]),
-#     x2 = mean(train_x[, 2]),
-#     grp_id = 2
-# ))
+origin.df <- data.frame(
+    x1 = train_x[, 1],
+    x2 = train_x[, 2],
+    grp_id = 1
+)
 
-# ggplot(origin.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
+origin.df <- rbind(origin.df, data.frame(
+    x1 = mean(train_x[, 1]),
+    x2 = mean(train_x[, 2]),
+    grp_id = 2
+))
 
-# ggsave("./e5-1a-origin.png")
+ggplot(origin.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
 
-# centered.df <- data.frame(
-#     x1 = centered_x[, 1],
-#     x2 = centered_x[, 2],
-#     grp_id = 1
-# )
+ggsave("./e5-1a-origin.png")
 
-# centered.df <- rbind(centered.df, data.frame(
-#     x1 = mean(centered_x[, 1]),
-#     x2 = mean(centered_x[, 2]),
-#     grp_id = 2
-# ))
+centered.df <- data.frame(
+    x1 = centered_x[, 1],
+    x2 = centered_x[, 2],
+    grp_id = 1
+)
 
-# ggplot(centered.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
+centered.df <- rbind(centered.df, data.frame(
+    x1 = mean(centered_x[, 1]),
+    x2 = mean(centered_x[, 2]),
+    grp_id = 2
+))
 
-# ggsave("./e5-1a-centered.png")
+ggplot(centered.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
 
-# shpered.df <- data.frame(
-#     x1 = shpered_x[, 1],
-#     x2 = shpered_x[, 2],
-#     grp_id = 1
-# )
+ggsave("./e5-1a-centered.png")
 
-# shpered.df <- rbind(shpered.df, data.frame(
-#     x1 = mean(shpered_x[, 1]),
-#     x2 = mean(shpered_x[, 2]),
-#     grp_id = 2
-# ))
+shpered.df <- data.frame(
+    x1 = shpered_x[, 1],
+    x2 = shpered_x[, 2],
+    grp_id = 1
+)
 
-# ggplot(shpered.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
+shpered.df <- rbind(shpered.df, data.frame(
+    x1 = mean(shpered_x[, 1]),
+    x2 = mean(shpered_x[, 2]),
+    grp_id = 2
+))
 
-# ggsave("./e5-1a-shpered.png")
+ggplot(shpered.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point() # + xlim(-1, 1) + ylim(-1, 1)
+
+ggsave("./e5-1a-shpered.png")
