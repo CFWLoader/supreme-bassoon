@@ -10,15 +10,28 @@ validate_set.df <- read.csv("../datasets/ValidationRidge.csv")
 
 source("./lib/preprocess.R")
 
-train_x <- data.matrix(train_set.df[c(1, 2)])
+# center_data.matrix <- function(mat)
+# {
+#     cols = ncol(mat)
+#     rows = nrow(mat)
+#     ret.mat <- matrix(nrow = rows, ncol = cols)
+#     for(row in c(1:rows))
+#     {
+#         mean.val <- mean(mat[row, ])
+#         ret.mat[row, ] <- mat[row, ] - mean.val
+#     }
+#     return(ret.mat)
+# }
+
+train_x <- t(data.matrix(train_set.df[c(1, 2)]))
 
 sample.size <- nrow(train_x)
 
-# centered_x <- center_data.matrix(train_x)
+centered_x <- center_data.matrix(train_x)
 
 # print(head(centered_x))
 
-centered_x <- scale(train_x, scale = FALSE)         # Use scale() to center the data.
+# centered_x <- scale(train_x, scale = FALSE)         # Use scale() to center the data.
 
 x_cov <- (centered_x %*% t(centered_x)) / sample.size
 
@@ -28,23 +41,35 @@ x_cov.eigenvalue <- x_cov.eigen$values
 
 x_cov.eigenvectors <- x_cov.eigen$vectors
 
+# library(matrixcalc)
+# print(is.positive.semi.definite(x_cov))
+
+# print(x_cov.eigenvectors[, 1])
+
+# valid.idx <- 65
+# xxx1 <- x_cov %*% x_cov.eigenvectors[, valid.idx]
+# xxx2 <- matrix(x_cov.eigenvalue[valid.idx] * x_cov.eigenvectors[, valid.idx], ncol = 1)
+# print(all.equal(xxx1, xxx2))
+
 x_tilde <- t(x_cov.eigenvectors) %*% centered_x
 
-# print(str(x_tilde))
+eigenvalue.diag <- matrix(rep(0, sample.size**2), nrow = sample.size, ncol = sample.size)
 
-eigenvalue.diag <- (x_tilde %*% t(x_tilde)) / sample.size
-
-# print(str(x_cov.eigenvalue))
-
-# eigenvalue.diag <- matrix(rep(0, sample.size**2), nrow = sample.size, ncol = sample.size)
+# print(str(eigenvalue.diag))
 
 # diag(eigenvalue.diag) <- x_cov.eigenvalue
 
-# print(length(x_cov.eigenvalue))
+# print(all.equal(eigenvalue.diag, x_tilde %*% t(x_tilde)))
+
+# print(str(x_tilde))
+
+# eigenvalue.diag <- (x_tilde %*% t(x_tilde)) / sample.size
+
+# print(str(x_cov.eigenvalue)
 
 # for(i in c(1:sample.size))
 # {
-#     if(is.nan(sqrt(eigenvalue.diag[i, i])))
+#     if(eigenvalue.diag[i, i] <= 0)
 #     {
 #         print(paste(i, eigenvalue.diag[i, i]))
 #     }
@@ -52,37 +77,54 @@ eigenvalue.diag <- (x_tilde %*% t(x_tilde)) / sample.size
 
 # print(str(eigenvalue.diag))
 
-shpered_x <- eigenvalue.diag %*% t(x_cov.eigenvectors) %*% centered_x
+# shpered_x <- eigenvalue.diag**(-1/2) %*% t(x_cov.eigenvectors) %*% centered_x
 
 # print(shpered_x)
 
-# print(str(x_cov))
+# origin.df <- data.frame(
+#     x1 = train_x[, 1],
+#     x2 = train_x[, 2],
+#     grp_id = 1
+# )
 
-# print(str(validate_set.df))
+# origin.df <- rbind(origin.df, data.frame(
+#     x1 = mean(train_x[, 1]),
+#     x2 = mean(train_x[, 2]),
+#     grp_id = 2
+# ))
 
-origin.df <- data.frame(
-    x1 = train_x[, 1],
-    x2 = train_x[, 2]
-)
+# ggplot(origin.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
 
-ggplot(origin.df, aes(x = x1, y = x2)) + geom_point()
+# ggsave("./e5-1a-origin.png")
 
-ggsave("./e5-1a-origin.png")
+# centered.df <- data.frame(
+#     x1 = centered_x[, 1],
+#     x2 = centered_x[, 2],
+#     grp_id = 1
+# )
 
-centered.df <- data.frame(
-    x1 = centered_x[, 1],
-    x2 = centered_x[, 2]
-)
+# centered.df <- rbind(centered.df, data.frame(
+#     x1 = mean(centered_x[, 1]),
+#     x2 = mean(centered_x[, 2]),
+#     grp_id = 2
+# ))
 
-ggplot(centered.df, aes(x = x1, y = x2)) + geom_point()
+# ggplot(centered.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
 
-ggsave("./e5-1a-centered.png")
+# ggsave("./e5-1a-centered.png")
 
-shpered.df <- data.frame(
-    x1 = shpered_x[, 1],
-    x2 = shpered_x[, 2]
-)
+# shpered.df <- data.frame(
+#     x1 = shpered_x[, 1],
+#     x2 = shpered_x[, 2],
+#     grp_id = 1
+# )
 
-ggplot(shpered.df, aes(x = x1, y = x2)) + geom_point()
+# shpered.df <- rbind(shpered.df, data.frame(
+#     x1 = mean(shpered_x[, 1]),
+#     x2 = mean(shpered_x[, 2]),
+#     grp_id = 2
+# ))
 
-ggsave("./e5-1a-shpered.png")
+# ggplot(shpered.df, aes(x = x1, y = x2, color = as.factor(grp_id))) + geom_point()
+
+# ggsave("./e5-1a-shpered.png")
