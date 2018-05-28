@@ -1,8 +1,13 @@
 import statsmodels.api as statmod
 import pandas
+import os
 # import statsmodels.tsa._expsmoothings as esfamily
 
-seasfac_data = pandas.read_csv('../../../va_data/catalog_seasfac_cus.csv', usecols=['men'])
+script_dir = os.path.dirname(__file__)
+
+file_loc = os.path.join(script_dir, "..", "..", "..", "va_data", "catalog_seasfac_cus.csv")
+
+seasfac_data = pandas.read_csv(file_loc, usecols=['men'])
 
 # arma01mod = statmod.tsa.ARMA(seasfac_data, (0,1)).fit(disp = False)
 
