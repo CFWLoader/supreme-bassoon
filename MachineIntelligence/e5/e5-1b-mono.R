@@ -33,13 +33,18 @@ valid.mono.df <- monomial2dim(x1.val, x2.val, monomial_lim)
 y_t <- data.matrix(train_set.df$obs)
 phi_mat <- data.matrix(monomials.df)
 
-plt.df <- data.frame(
-    x1 = x1.val,
-    x2 = x2.val,
-    trans = c(t(valid.mono.df[10, ]))
-)
+pltdf.list <- list()
 
-ggplot(data = plt.df, aes(x = x1, y = x2, color = trans)) + geom_point() + scale_color_gradientn(colors = rainbow(50))
+for(i in c(1:4))
+{
+    plt.df <- data.frame(
+        x1 = x1.val,
+        x2 = x2.val,
+        trans = c(t(valid.mono.df[i, ]))
+    )
+
+    pltdf.list[[i]] <- ggplot(data = plt.df, aes(x = x1, y = x2, color = trans)) + geom_point() + scale_color_gradientn(colors = rainbow(50))
+}
 
 ggsave("./e5-1b-mono2.png")
 

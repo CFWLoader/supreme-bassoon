@@ -27,43 +27,14 @@ x2.val <- val_x[, 2]
 
 monomial_lim <- 3
 
-monomials.df <- monomial2dim(x1, x2, monomial_lim)
 valid.mono.df <- monomial2dim(x1.val, x2.val, monomial_lim)
-
-# monomials.df <- NULL
-# valid.mono.df <- NULL
-# for(k in c(0 : monomial_lim))
-# {
-#     for(a in c(0 : k))
-#     {
-#         b <- k - a
-#         tmp.df <- data.frame(data = x1**a * x2**b)
-#         monomials.df <- rbind(monomials.df, data.frame(
-#             data = t(tmp.df),
-#             row.names = c(paste("x1^", a, "*x2^", b, sep = ""))
-#         ))
-#         tmp.df <- data.frame(data = x1.val**a * x2.val**b)
-#         valid.mono.df <- rbind(valid.mono.df, data.frame(
-#             data = t(tmp.df),
-#             row.names = c(paste("x1^", a, "*x2^", b, sep = ""))
-#         ))
-#     }
-# }
-
-y_t <- data.matrix(train_set.df$obs)
-phi_mat <- data.matrix(monomials.df)
-
-# y_t <- data.matrix(validate_set.df$dens)
-# phi_mat <- data.matrix(valid.mono.df)
-
-phi_mat.tinv <- ginv(phi_mat %*% t(phi_mat))
-
 expand_val_x <- data.matrix(valid.mono.df)
 
-# weight <- solve(phi_mat %*% t(phi_mat)) %*% phi_mat %*% t(y_t)
-weight <- phi_mat.tinv %*% phi_mat %*% y_t
+trained <- train_expand_param2dim(x1, x2, y_t, monomial_lim)
 
-y_prd <- t(weight) %*% expand_val_x 
+y_prd <- t(trained$weight) %*% expand_val_x 
+
+# y_prd <- t(weight) %*% expand_val_x 
 
 valid_prd.df <- data.frame(
     x1 = x1.val,
@@ -77,16 +48,12 @@ ggsave("./e5-1b-val-predict-m10.png")
 
 monomial_lim <- 10
 
-monomials.df <- monomial2dim(x1, x2, monomial_lim)
 valid.mono.df <- monomial2dim(x1.val, x2.val, monomial_lim)
-
-phi_mat <- data.matrix(monomials.df)
-# phi_mat <- data.matrix(valid.mono.df)
-phi_mat.tinv <- ginv(phi_mat %*% t(phi_mat))
 expand_val_x <- data.matrix(valid.mono.df)
-weight <- phi_mat.tinv %*% phi_mat %*% y_t
 
-y_prd <- t(weight) %*% expand_val_x 
+trained <- train_expand_param2dim(x1, x2, y_t, monomial_lim)
+
+y_prd <- t(trained$weight) %*% expand_val_x 
 
 valid_prd.df <- data.frame(
     x1 = x1.val,
