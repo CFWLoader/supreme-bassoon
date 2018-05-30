@@ -1,3 +1,5 @@
+library(expm)
+
 center_data <- function(data)
 {
     cols = ncol(data)
@@ -34,11 +36,11 @@ whiten_params <- function(data, centered = FALSE)
 
     eigenvalue.diag <- matrix(rep(0, eigenlen**2), nrow = eigenlen, ncol = eigenlen)
 
-    diag(eigenvalue.diag) <- eigenvalues**(-1/2)
+    diag(eigenvalue.diag) <- eigenvalues
 
     # print(eigenvectors)
 
-    eigen_trans <- eigenvalue.diag %*% t(eigenvectors)
+    eigen_trans <- eigenvalue.diag%^%(-1/2) %*% t(eigenvectors)
 
     ret.vals <- list(covar = cov_mat, eigenvalues = eigenvalues, eigenvectors = eigenvectors, 
         eigenvalues.matrix = eigenvalue.diag, centered_data = centered_data, eigen.transmat = eigen_trans)
