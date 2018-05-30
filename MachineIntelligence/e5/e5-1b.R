@@ -9,13 +9,25 @@ train_set.df <- read.csv("../datasets/TrainingRidge.csv")
 
 validate_set.df <- read.csv("../datasets/ValidationRidge.csv")
 
-x1 <- train_set.df$x1
+source("./lib/whitening.R")
 
-x2 <- train_set.df$x2
+packtmp <- sphere(data.matrix(train_set.df[c(1, 2)]))
 
-x1.val <- validate_set.df$x1
+sphere.params <- packtmp$params
 
-x2.val <- validate_set.df$x2
+train_x <- packtmp$whitedata
+
+packtmp <- sphere(data.matrix(validate_set.df[c(1, 2)]), sphere.params)
+
+val_x <- packtmp$whitedata
+
+x1 <- train_x[, 1]
+
+x2 <- train_x[, 2]
+
+x1.val <- val_x[, 1]
+
+x2.val <- val_x[, 2]
 
 monomials.df <- NULL
 
