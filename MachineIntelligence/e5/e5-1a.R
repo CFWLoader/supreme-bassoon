@@ -1,5 +1,4 @@
 library(ggplot2)
-library(expm)
 
 script.dir <- dirname(sys.frame(1)$ofile)
 
@@ -54,9 +53,9 @@ x_cov.eigenvectors <- x_cov.eigen$vectors
 
 # x_tilde <- t(x_cov.eigenvectors) %*% centered_x
 
-eigenvalue.diag <- matrix(rep(0, sample.size**2), nrow = sample.size, ncol = sample.size)
+eigenvalue.rootmat <- matrix(rep(0, sample.size**2), nrow = sample.size, ncol = sample.size)
 
-diag(eigenvalue.diag) <- x_cov.eigenvalue
+diag(eigenvalue.rootmat) <- x_cov.eigenvalue**(-1/2)
 
 # print(eigenvalue.diag)
 
@@ -78,7 +77,7 @@ diag(eigenvalue.diag) <- x_cov.eigenvalue
 
 # print(str(eigenvalue.diag))
 
-shpered_x <- eigenvalue.diag%^%(-1/2) %*% t(x_cov.eigenvectors) %*% centered_x
+shpered_x <- eigenvalue.rootmat %*% t(x_cov.eigenvectors) %*% centered_x
 
 # print(shpered_x)
 
@@ -148,7 +147,7 @@ valid_x <- t(data.matrix(validate_set.df[c(1, 2)]))
 
 centered_val_x <- center_data.matrix(valid_x)
 
-sphered_val_x <- eigenvalue.diag %*% t(x_cov.eigenvectors) %*% centered_val_x
+sphered_val_x <- eigenvalue.rootmat %*% t(x_cov.eigenvectors) %*% centered_val_x
 
 sphered_val.df <- data.frame(
     x1 = sphered_val_x[1, ],

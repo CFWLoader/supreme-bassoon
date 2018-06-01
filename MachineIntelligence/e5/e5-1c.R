@@ -9,6 +9,8 @@ source("./lib/monomial.R")
 
 train_set.df <- read.csv("../datasets/TrainingRidge.csv")
 
+colnames(train_set.df) <- c("x1", "x2", "y")
+
 packtmp <- sphere(data.matrix(train_set.df[c(1, 2)]))
 sphere.params <- packtmp$params
 train_x <- packtmp$whitedata
@@ -16,10 +18,12 @@ train_x <- packtmp$whitedata
 whiten_train.df <- data.frame(
     x1 = train_x[, 1],
     x2 = train_x[, 2],
-    y = train_set.df$obs
+    y = train_set.df$y
 )
 
 fold_ready.df = whiten_train.df
+
+# print(head(fold_ready.df))
 
 k_fold <- 10
 
@@ -62,6 +66,6 @@ for(lam in seq(-4, 4, 0.1))
     )
 }
 
-ggplot(mse.df, aes(x = lambda, y = mse.val)) + geom_line() + geom_errorbar(aes(min = mse.val - std, max = mse.val + std))
+ggplot(mse.df, aes(x = lambda, y = mse.val)) + geom_point() + geom_errorbar(aes(min = mse.val - std, max = mse.val + std))
 
 ggsave("./e5-1c-mse.png")

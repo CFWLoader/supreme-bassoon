@@ -30,7 +30,7 @@ monomial_lim <- 3
 valid.mono.df <- monomial2dim(x1.val, x2.val, monomial_lim)
 expand_val_x <- data.matrix(valid.mono.df)
 
-trained <- train_expand_param2dim(x1, x2, y_t, monomial_lim)
+trained <- train_expand_param2dim(x1, x2, train_set.df$obs, monomial_lim)
 
 y_prd <- t(trained$weight) %*% expand_val_x 
 
@@ -51,7 +51,7 @@ monomial_lim <- 10
 valid.mono.df <- monomial2dim(x1.val, x2.val, monomial_lim)
 expand_val_x <- data.matrix(valid.mono.df)
 
-trained <- train_expand_param2dim(x1, x2, y_t, monomial_lim)
+trained <- train_expand_param2dim(x1, x2, train_set.df$obs, monomial_lim)
 
 y_prd <- t(trained$weight) %*% expand_val_x 
 
