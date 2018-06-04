@@ -22,12 +22,15 @@ model %>%
     layer_dense(units = 1500, activation = "relu", input_shape = c(784), 
         kernel_initializer = initializer_random_normal(mean = 0, stddev = 0.01), 
         bias_initializer = initializer_constant(value = 0.1)) %>%
+    layer_dropout(0.5) %>%
     layer_dense(units = 1500, activation = "relu", 
         kernel_initializer = initializer_random_normal(mean = 0, stddev = 0.01), 
         bias_initializer = initializer_constant(value = 0.1)) %>%
+    layer_dropout(0.5) %>%
     layer_dense(units = 1500, activation = "relu", 
         kernel_initializer = initializer_random_normal(mean = 0, stddev = 0.01), 
         bias_initializer = initializer_constant(value = 0.1)) %>%
+    layer_dropout(0.5) %>%
     layer_dense(units = 10, activation = "softmax")
 
 # C:\\Users\\IBM_ADMIN\\Desktop\\supreme-bassoon\\MachineIntelligence\\e6
@@ -51,4 +54,4 @@ plt.df <- data.frame(
 
 ggplot(plt.df, aes(x = x)) + geom_point(aes(y = loss, color = "Loss")) + geom_point(aes(y = acc, color = "Acc")) + labs(color = "Type")
 
-ggsave("e6-1b.png")
+ggsave("e6-1c.png")
