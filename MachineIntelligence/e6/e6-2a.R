@@ -4,7 +4,7 @@ gensam <- function(sample.size = 10000, num_props = 30, val_portion = 0.2)
 
     all.y <- array(dim = c(sample.size, 1))
 
-    for(i in (1 : sample.nrow))
+    for(i in (1 : sample.size))
     {
         all.x[i, ] <- array(round(runif(num_props, 0, 9)))
         if(sum(all.x[i, ]) >= 100)

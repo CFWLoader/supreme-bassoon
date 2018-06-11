@@ -1,4 +1,5 @@
 library(keras)
+library(ggplot2)
 
 script_dir <- dirname(sys.frame(1)$ofile)
 setwd(script_dir)
@@ -16,8 +17,8 @@ model <- keras_model_sequential()
 
 model %>%
     # layer_dense(units = 200, input_shape = c(30)) %>%
-    layer_lstm(units = 200, activation = "hard_sigmoid", input_shape = c(30, 1)) %>%
-    layer_dense(units = 1, activation = "sigmoid")
+    # layer_lstm(units = 200, activation = "hard_sigmoid", input_shape = c(30, 1)) %>%
+    layer_dense(units = 1, activation = "sigmoid", input_shape = c(30))
 
 # summary(model)
 
