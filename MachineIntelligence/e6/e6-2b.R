@@ -8,17 +8,18 @@ source("./e6-2a.R")
 
 dataset <- gensam()
 
-x_train <- dataset$train$x
+# you have to change your input shape (nb_samples, timesteps, input_dim)
+x_train <- array_reshape(dataset$train$x, c(nrow(dataset$train$x), 30, 1))
 y_train <- dataset$train$y
 
-# str(dataset)
+x_test <- array_reshape(dataset$test$x, c(nrow(dataset$test$x), 30, 1))
+y_test <- dataset$test$y
 
 model <- keras_model_sequential()
 
 model %>%
-    # layer_dense(units = 200, input_shape = c(30)) %>%
-    # layer_lstm(units = 200, activation = "hard_sigmoid", input_shape = c(30, 1)) %>%
-    layer_dense(units = 1, activation = "sigmoid", input_shape = c(30))
+    layer_lstm(units = 200, activation = "hard_sigmoid", input_shape = c(30, 1)) %>%
+    layer_dense(units = 1, activation = "sigmoid")
 
 # summary(model)
 
@@ -32,6 +33,12 @@ history <- model %>% fit(
   x_train, y_train,
   epochs = 10, batch_size = 100
 )
+
+eval_report <- model %>% evaluate(
+  x_test, y_test
+)
+
+print(eval_report)
 
 plt.df <- data.frame(
   x = c(1:length(history$metrics$loss)),
