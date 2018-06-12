@@ -26,14 +26,20 @@ test_set <- expand.grid(
     y = seq(y_axis.min, y_axis.max, y_axis.ssize)
 )
 
-cls.val <- knn(train_set[c(1, 2)], test_set, cl = as.factor(train_set$cls), k = 1, prob = TRUE)
+for(k.val in seq(1, 5, 2))
+{
+    cls.val <- knn(train_set[c(1, 2)], test_set, cl = as.factor(train_set$cls), k = k.val, prob = TRUE)
 
-cls.prob <- attr(cls.val, "prob")
+    cls.prob <- attr(cls.val, "prob")
 
-test.df <- data.frame(
-    x1 = test_set$x, x2 = test_set$y, y = cls.val, prob = cls.prob
-)
+    test.df <- data.frame(
+        x1 = test_set$x, x2 = test_set$y, y = cls.val, prob = cls.prob
+    )
 
-ggplot(test.df, aes(x = x1, y = x2, fill = y)) + geom_tile() # + geom_point(data = train_set, aes(x = x1, y = x2, color = as.factor(cls)))
+    ggplot() + 
+        # geom_contour(data = test.df, aes(x = x1, y = x2, z = cls.prob, group = as.factor(y), color = as.factor(y)), bins = 1) + 
+        geom_tile(data = test.df, aes(x = x1, y = x2, color = as.factor(y), fill = cls.prob)) + labs(title = paste("DB(k=", k.val, ")", sep = ""))
+        # geom_point(data = train_set, aes(x = x1, y = x2, color = as.factor(cls)))
 
-ggsave("./e7-2a.png")
+    ggsave(paste("./e7-2a-k", k.val, ".png", sep = ""))
+}
