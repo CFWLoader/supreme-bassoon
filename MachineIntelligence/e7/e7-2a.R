@@ -7,7 +7,7 @@ setwd(script.dir)
 
 source("./lib/gen_data.R")
 
-train_set <- gensam()[c("x1", "x2", "y")]
+train_set <- gensam()
 
 colnames(train_set) <- c("x1", "x2", "cls")
 

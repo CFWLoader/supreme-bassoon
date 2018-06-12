@@ -27,7 +27,7 @@ genclass <- function(sample.size = 60, mu1 = c(0, 1), mu2 = c(1, 0), sigma = dia
     x <- rand_choose(summand.left, summand.right)
 
     dataset <- data.frame(
-        x1 = x[, 1], x2 = x[, 2], c1 = 1, c2 = 0, y = cls
+        x1 = x[, 1], x2 = x[, 2], y = cls
     )
 
     dataset
