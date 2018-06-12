@@ -19,6 +19,20 @@ rand_choose <- function(l, r)
     ret.val
 }
 
+genclass <- function(sample.size = 60, mu1 = c(0, 1), mu2 = c(1, 0), sigma = diag(2) * 0.1, cls = 1)
+{
+    summand.left <- mvrnorm(sample.size, mu = mu1, Sigma = sigma)
+    summand.right <- mvrnorm(sample.size, mu = mu2, Sigma = sigma)
+
+    x <- rand_choose(summand.left, summand.right)
+
+    dataset <- data.frame(
+        x1 = x[, 1], x2 = x[, 2], c1 = 1, c2 = 0, y = cls
+    )
+
+    dataset
+}
+
 gensam <- function(sample.size = 120)
 {
     mu1 <- c(0, 1)
@@ -27,27 +41,9 @@ gensam <- function(sample.size = 120)
     mu4 <- c(1, 1)
     sigma <- diag(2) * 0.1
 
-    summand.left <- mvrnorm(sample.size / 2, mu = mu1, Sigma = sigma)
-    summand.right <- mvrnorm(sample.size / 2, mu = mu2, Sigma = sigma)
+    dataset <- genclass(sample.size / 2, mu1, mu2, sigma, 1)
 
-    x <- rand_choose(summand.left, summand.right)
-
-    # p.y0 <- 0.5 * (summand.left + summand.right)
-
-    dataset <- data.frame(
-        x1 = x[, 1], x2 = x[, 2], c1 = 1, c2 = 0, y = 1
-    )
-
-    summand.left <- mvrnorm(sample.size / 2, mu = mu3, Sigma = sigma)
-    summand.right <- mvrnorm(sample.size / 2, mu = mu4, Sigma = sigma)
-
-    x <- rand_choose(summand.left, summand.right)
-
-    # p.y0 <- 1 - 0.5 * (summand.left + summand.right)
-
-    dataset <- rbind(dataset, data.frame(
-        x1 = x[, 1], x2 = x[, 2], c1 = 0, c2 = 1, y = 2
-    ))
+    dataset <- rbind(dataset, genclass(sample.size / 2, mu3, mu4, sigma, 2))
 
     # for(i in c(1:sample.size))
     # {
