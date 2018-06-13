@@ -7,6 +7,7 @@ setwd(script.dir)
 
 source("./lib/gen_data.R")
 source("./lib/parzenwin.R")
+source("./lib/plot_decbound.R")
 
 train_set <- gensam()
 
@@ -16,24 +17,7 @@ train_set <- rbind(train_set, data.frame(
     x1 = tx3[, 1], x2 = tx3[, 2], y = 3
 ))
 
-# ggplot(train_set, aes(x = x1, y = x2, color = as.factor(y))) + geom_point()
-
-# ggsave("./e7-3b-train.png")
-
-grid.num <- 128
-
-x_axis.min <- min(train_set$x1)
-x_axis.max <- max(train_set$x1)
-x_axis.ssize <- (x_axis.max - x_axis.min)/grid.num
-
-y_axis.min <- min(train_set$x2)
-y_axis.max <- max(train_set$x2)
-y_axis.ssize <- (y_axis.max - y_axis.min)/grid.num
-
-test_set <- expand.grid(
-    x = seq(x_axis.min, x_axis.max, x_axis.ssize),
-    y = seq(y_axis.min, y_axis.max, y_axis.ssize)
-)
+test_set <- make_plotpoint(train_set)
 
 for(k.val in seq(1, 5, 2))
 {
@@ -45,10 +29,7 @@ for(k.val in seq(1, 5, 2))
         x1 = test_set$x, x2 = test_set$y, y = cls.val, prob = cls.prob
     )
 
-    ggplot() + 
-        geom_tile(data = test.df, aes(x = x1, y = x2, color = as.factor(y), fill = cls.prob)) + labs(title = paste("DB(k=", k.val, ")", sep = ""))
-
-    ggsave(paste("./e7-3b-k", k.val, ".png", sep = ""))
+    dbplot(train_set, test.df, sprintf("./e7-3b-k%d.png", k.val))
 }
 
 for(sigmak in c(0.5, 0.1, 0.01))
@@ -59,8 +40,5 @@ for(sigmak in c(0.5, 0.1, 0.01))
         x1 = test_set$x, x2 = test_set$y, y = cls.val$class, prob = cls.val$prob
     )
 
-    ggplot() + # geom_point(data = test.df, aes(x = x1, y = x2, color = as.factor(y))) + labs(title = paste("DB(Sigma=", sigmak, ")", sep = ""))
-        geom_tile(data = test.df, aes(x = x1, y = x2, color = as.factor(y), group = as.factor(y), fill = prob)) + labs(title = paste("DB(Sigma=", sigmak, ")", sep = ""))
-
-    ggsave(sprintf("./e7-3b-s%2f.png", sigmak))
+    dbplot(train_set, test.df, sprintf("./e7-3b-s%2f.png", sigmak))
 }
