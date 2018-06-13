@@ -62,5 +62,5 @@ for(sigmak in c(0.5, 0.1, 0.01))
     ggplot() + # geom_point(data = test.df, aes(x = x1, y = x2, color = as.factor(y))) + labs(title = paste("DB(Sigma=", sigmak, ")", sep = ""))
         geom_tile(data = test.df, aes(x = x1, y = x2, color = as.factor(y), group = as.factor(y), fill = prob)) + labs(title = paste("DB(Sigma=", sigmak, ")", sep = ""))
 
-    ggsave(sprintf("./e7-2b-s%2f.png", sigmak))
+    ggsave(sprintf("./e7-3b-s%2f.png", sigmak))
 }
