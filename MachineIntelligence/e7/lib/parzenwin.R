@@ -1,22 +1,38 @@
-parzenknn <- function (train, test, cl, k = 1, sigmak = 0.5)
+parzenwin <- function (train_df, test_df, cl, sigmak = 0.5)
 {
-    clsmat <- matrix(nrow = nrow(test), ncol = 2)
+    cls.vec <- rep(0, length = nrow(test_df))
+    prob.vec <- rep(0, length = nrow(test_df))
+    clslvl <- levels(cl)
+    train <- data.matrix(train_df)
+    test <- data.matrix(test_df)
     for(idx in c(1:nrow(test)))
     {
         dist.vec <- test[idx, ] - train
-        dist.val <- exp(-rowSums(dist.vec * dist.vec)/(2 * sigmak))
-        dist.val <- dist.val / sum(dist.val)
-        clsrank <- cl[order(dist.val)]
-        topkcls <- clsrank[c(1:k)]
-        fretbl <- table(topkcls)
-        fretbl <- fretbl / sum(fretbl)
-        fretbl <- fretbl[order(fretbl, decreasing = TRUE)]
-        clsinfo <- fretbl[1]
-        clsmat[idx, 1] <- attr(clsinfo, "names")
-        clsmat[idx, 2] <- clsinfo
+        eudist.val <- rowSums(dist.vec * dist.vec)
+        dens.val <- exp(-eudist.val/(2 * sigmak))
+        dens.val <- dens.val / sum(dens.val)
+        print(sum(dens.val))
+        cls.val <- NULL
+        cls.prob <- 0
+        for(lvl in clslvl)
+        {
+            probi = sum(dens.val[which(cl == lvl)])
+            if(probi > cls.prob)
+            {
+                cls.prob = probi
+                cls.val = lvl
+            }
+        }
+        cls.vec[idx] <- cls.val
+        prob.vec[idx] <- cls.prob
+        print(sprintf("Prob=%f, CLS=%s", cls.prob, cls.val))
+        for(pidx in c(1:nrow(train)))
+        {
+            print(sprintf("Point(%f, %f), dist=%f, dens=%f, cls=%s", train[pidx, 1], train[pidx, 2], eudist.val[pidx], dens.val[pidx], cl[pidx]))
+        }
     }
     data.frame(
-        class = clsmat[, 1],
-        prob = clsmat[, 2]
+        class = as.factor(cls.vec),
+        prob = prob.vec
     )
 }
