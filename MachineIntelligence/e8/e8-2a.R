@@ -22,6 +22,7 @@ gensam <- function(sample.size)
 testset <- gensam(1000)
 
 testx <- data.matrix(testset[, c(1, 2)])
+testx <- cbind(testx, matrix(rep(1, length = nrow(testx)), ncol = 1))
 testy <- data.matrix(testset[, 3])
 
 trainsizes <- c(2, 4, 6, 8, 10, 20, 40, 100)
@@ -38,6 +39,7 @@ for(trainsize in trainsizes)
     {
         trainset <- gensam(trainsize)
         xmat <- data.matrix(trainset[, c(1, 2)])
+        xmat <- cbind(xmat, matrix(rep(1, length = nrow(xmat)), ncol = 1))
         ymat <- data.matrix(trainset[, 3])
         weight <- ginv(t(xmat) %*% xmat) %*% t(xmat) %*% ymat
         train.prd <- sign(xmat %*% weight)
