@@ -34,11 +34,11 @@ trainset_x <- data.matrix(trainset[c(1, 2)])
 
 testset <- make_plotpoint(trainset)
 
-for(kval in c(10:20))
+for(kval in c(2:6))
 {
-    for(sigmaval in seq(0.01, 1, 0.1))
+    for(sigmaval in c(0.01, seq(0.1, 0.6, 0.1)))
     {
-        kcenters <- data.matrix(kmeans(trainset_x, 2)$centers)
+        kcenters <- data.matrix(kmeans(trainset_x, kval)$centers)
         weights <- retrieve_weight(trainset_x, kcenters, trainset$y, sigmaval)
         phiedtest <- philize(testset, kcenters, sigmaval)
         prd <- t(weights) %*% phiedtest
