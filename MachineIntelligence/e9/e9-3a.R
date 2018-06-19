@@ -12,20 +12,16 @@ samsize <- 40
 trainset <- genclass(samsize, c(0, 1), c(1, 0), cls = 0)
 trainset <- rbind(trainset, genclass(samsize, c(0, 0), c(1, 1), cls = 1))
 
-# ggplot(trainset, aes(x = x1, y = x2, color = as.factor(y))) + geom_point()
-# ggsave("./e9-2a.png")
-
 trainx <- data.matrix(trainset[, c(1, 2)])
 trainy <- as.factor(trainset[, 3])
 
 testx <- make_plotpoint(trainset)
 
+cost.vals <- c()
+for(idx in seq(-6, 10, 2)) cost.vals <- c(cost.vals, 2**idx)
+
+gamma.vals <- c()
+for(idx in seq(-5, 9, 2)) gamma.vals <- c(gamma.vals, 2**idx)
+
 csvm <- svm(trainx, trainy, type = "C-classification")
-testy <- predict(csvm, testx)
-# trainy.prd <- predict(cvsm, trainx)
-
-# print(length(which(trainy.prd == trainy))/length(trainy))
-
-pltobj <- dbplot(trainset, data.frame(x1 = testx[, 1], x2 = testx[, 2], y = testy))
-
-ggsave("./e9-2a.png")
+# testy <- predict(csvm, testx)

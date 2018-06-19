@@ -14,7 +14,7 @@ make_plotpoint <- function(trainset, grid.num = 128)
     )
 }
 
-dbplot <- function(trainset, testset, filename)
+dbplot <- function(trainset, testset, filename, plot.prob = FALSE)
 {
     trainplotdf <- data.frame(
         x1 = trainset[, 1],
@@ -25,14 +25,24 @@ dbplot <- function(trainset, testset, filename)
     testplotdf <- data.frame(
         x1 = testset[, 1],
         x2 = testset[, 2],
-        y = testset[, 3],
-        prob = testset[, 4]
+        y = testset[, 3]
     )
 
-    ggplot() + 
-        geom_contour(data = testplotdf, aes(x = x1, y = x2, z = prob, color = as.factor(y)), bins = 1) + 
-        geom_point(data = testplotdf, aes(x = x1, y = x2, color = as.factor(y)), size = 0.5) +
+    pltobj <- ggplot() + 
+        geom_point(data = testplotdf, aes(x = x1, y = x2, color = as.factor(y)), size = 0.5) + 
         geom_point(data = trainplotdf, aes(x=x1, y=x2, color = as.factor(y)), size = 2)
 
-    ggsave(filename)
+    if(plot.prob)
+    {
+        testplotdf <- cbind(testplotdf, data.frame(prob = testset[, 4]))
+        pltobj + geom_contour(data = testplotdf, aes(x = x1, y = x2, z = prob, color = as.factor(y)), bins = 1)
+    }
+
+    if(missing(filename))
+    {
+        pltobj
+    }
+    else {
+       ggsave(filename)
+    }
 }
