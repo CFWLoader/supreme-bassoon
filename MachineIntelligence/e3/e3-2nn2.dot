@@ -21,17 +21,11 @@ digraph{
     input1 -> input01 [label=<x<sup>(&alpha;)</sup><sub>1</sub>>]
     input2 -> input02 [label=<x<sup>(&alpha;)</sup><sub>2</sub>>]
     input3 -> input03 [label=<x<sup>(&alpha;)</sup><sub>3</sub>>]
-    input01 -> input11
-    input01 -> input12
-    input01 -> input13
-    input02 -> input11
-    input02 -> input12
-    input02 -> input13
-    input03 -> input11
-    input03 -> input12
-    input03 -> input13
-    input11 -> output
-    input12 -> output
-    input13 -> output
+    input01 -> input11 [label=<W<sup>10</sup><sub>11</sub>>]
+    input02 -> input12 [label=<W<sup>10</sup><sub>22</sub>>]
+    input03 -> input13 [label=<W<sup>10</sup><sub>33</sub>>]
+    input11 -> output [label=<W<sup>21</sup><sub>11</sub>>]
+    input12 -> output [label=<W<sup>21</sup><sub>12</sub>>]
+    input13 -> output [label=<W<sup>21</sup><sub>13</sub>>]
     output -> finalout [label=<y<sup>(&alpha;)</sup>>]
 }
