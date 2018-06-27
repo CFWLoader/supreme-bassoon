@@ -12,11 +12,11 @@ digraph{
     input02[label=<f(x)=x>] 
     input03[label=<f(x)=x>]
 
-    input11[label=<h<sup>1</sup><sub>1</sub>=tanh(W<sup>10</sup><sub>11</sub>x<sup>(&alpha;)</sup><sub>1</sub>+b<sup>1</sup><sub>1</sub>)>] 
-    input12[label=<h<sup>1</sup><sub>2</sub>=tanh(W<sup>10</sup><sub>22</sub>x<sup>(&alpha;)</sup><sub>2</sub>+b<sup>1</sup><sub>2</sub>)>] 
-    input13[label=<h<sup>1</sup><sub>3</sub>=tanh(W<sup>10</sup><sub>33</sub>x<sup>(&alpha;)</sup><sub>3</sub>+b<sup>1</sup><sub>3</sub>>]
+    input11[label=<S<sup>1</sup><sub>1</sub>=tanh(W<sup>10</sup><sub>11</sub>x<sup>(&alpha;)</sup><sub>1</sub>+b<sup>1</sup><sub>1</sub>)>] 
+    input12[label=<S<sup>1</sup><sub>2</sub>=tanh(W<sup>10</sup><sub>22</sub>x<sup>(&alpha;)</sup><sub>2</sub>+b<sup>1</sup><sub>2</sub>)>] 
+    input13[label=<S<sup>1</sup><sub>3</sub>=tanh(W<sup>10</sup><sub>33</sub>x<sup>(&alpha;)</sup><sub>3</sub>+b<sup>1</sup><sub>3</sub>)>]
 
-    output[label=<h<sup>2</sup><sub>1</sub>=tanh(&Sigma;W<sup>21</sup><sub>1j</sub>h<sup>1</sup><sub>j</sub>+b<sup>2</sup><sub>1</sub>)>]
+    output[label=<h<sup>2</sup><sub>1</sub>=&Sigma;W<sup>21</sup><sub>1j</sub>S<sup>1</sup><sub>j</sub>+b<sup>2</sup><sub>1</sub>>]
 
     input1 -> input01 [label=<x<sup>(&alpha;)</sup><sub>1</sub>>]
     input2 -> input02 [label=<x<sup>(&alpha;)</sup><sub>2</sub>>]
@@ -27,5 +27,5 @@ digraph{
     input11 -> output [label=<W<sup>21</sup><sub>11</sub>>]
     input12 -> output [label=<W<sup>21</sup><sub>12</sub>>]
     input13 -> output [label=<W<sup>21</sup><sub>13</sub>>]
-    output -> finalout [label=<y<sup>(&alpha;)</sup>>]
+    output -> finalout [label=<y<sup>(&alpha;)</sup>=tanh(h<sup>2</sup><sub>1</sub>)>]
 }
