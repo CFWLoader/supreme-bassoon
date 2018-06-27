@@ -15,9 +15,9 @@ digraph{
 
     output[label=<&Sigma;>]
 
-    input11 -> input01 [label=<e<sup>(&alpha;)</sup>W<sup>21</sup><sub>11</sub>S<sup>1</sup><sub>1</sub>(1-S<sup>1</sup><sub>1</sub>)>]
-    input12 -> input02 [label=<e<sup>(&alpha;)</sup>W<sup>21</sup><sub>12</sub>S<sup>1</sup><sub>2</sub>(1-S<sup>1</sup><sub>2</sub>)>]
-    input13 -> input03 [label=<e<sup>(&alpha;)</sup>W<sup>21</sup><sub>13</sub>S<sup>1</sup><sub>3</sub>(1-S<sup>1</sup><sub>3</sub>)>]
+    input11 -> input01 [label=<e<sup>(&alpha;)</sup>W<sup>21</sup><sub>11</sub>S<sup>1</sup><sub>1</sub>(1-S<sup>1</sup><sub>1</sub>)x<sup>(&alpha;)</sup><sub>1</sub>>]
+    input12 -> input02 [label=<e<sup>(&alpha;)</sup>W<sup>21</sup><sub>12</sub>S<sup>1</sup><sub>2</sub>(1-S<sup>1</sup><sub>2</sub>)x<sup>(&alpha;)</sup><sub>2</sub>>]
+    input13 -> input03 [label=<e<sup>(&alpha;)</sup>W<sup>21</sup><sub>13</sub>S<sup>1</sup><sub>3</sub>(1-S<sup>1</sup><sub>3</sub>)x<sup>(&alpha;)</sup><sub>3</sub>>]
     output -> input11 [label=<e<sup>(&alpha;)</sup>S<sup>1</sup><sub>1</sub>>]
     output -> input12 [label=<e<sup>(&alpha;)</sup><sub>t</sub>S<sup>1</sup><sub>2</sub>>]
     output -> input13 [label=<e<sup>(&alpha;)</sup><sub>t</sub>S<sup>1</sup><sub>3</sub>>]
