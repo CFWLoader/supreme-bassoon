@@ -58,7 +58,23 @@ linear_search <- function(w0, gradient.fun, iteration.max = 100)
 
 conjugate_gradient <- function(w0, gradient.fun, iteration.max = 100)
 {
-    
+    w.vec <- NULL
+    w.val <- w0
+    grad <- gradient.fun(w.val)
+    lindir <- -grad
+    for(iter in 1:iteration.max)
+    {
+        w.vec <- c(w.vec, w.val)
+        eta <- as.numeric(-(t(lindir) %*% grad)/(t(lindir) %*% h.mat %*% lindir))
+        # print(eta)
+        w.val <- w.val + eta * lindir
+        grad.n <- gradient.fun(w.val)
+        beta.t <- as.numeric(-(t(grad.n)%*%grad.n)/(t(grad)%*%grad))
+        lindir <- grad.n + beta.t * lindir
+        if(is.nan(beta.t))break
+        grad <- grad.n
+    }
+    matrix(w.vec, ncol = length(w0), byrow = TRUE)
 }
 
 plot_weight <- function(weight.mat, filename.suffix, plot.title = "Plot")
@@ -70,10 +86,10 @@ plot_weight <- function(weight.mat, filename.suffix, plot.title = "Plot")
     }
     # print(head(plot.df))
     ggplot(data = plot.df, aes(x = w0, y = w1)) + geom_point() + ggtitle(paste(plot.title, "(w0 vs w1)"))
-    ggsave(paste("./e4-2a_w0vsw1-", filename.suffix, ".png"))
+    ggsave(sprintf("./e4-2a_w0vsw1-%s.png", filename.suffix))
     plot.df <- cbind(plot.df, data.frame(iter = c(1:nrow(weight.mat))))
     ggplot(data = plot.df) + geom_point(aes(x = iter, y = w0, color = "w0")) + geom_point(aes(x = iter, y = w1, color = "w1")) + xlab("Iteration") + ylab("Weight") + ggtitle(paste(plot.title, "(Weight vs Iteration)"))
-    ggsave(paste("./e4-2a_wvsi-", filename.suffix, ".png"))
+    ggsave(sprintf("./e4-2a_wvsi-%s.png", filename.suffix))
 }
 
 gd <- gradient_descent(w.init, quadratic_error.gradient)
@@ -83,3 +99,7 @@ plot_weight(gd, 'a', "Gradient Descent")
 lin_srh <- linear_search(w.init, quadratic_error.gradient)
 
 plot_weight(lin_srh, "b", "Linear Search")
+
+conj <- conjugate_gradient(w.init, quadratic_error.gradient, 5)
+
+plot_weight(conj, "c", "Conjugate Descent")
