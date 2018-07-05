@@ -1,6 +1,9 @@
 library(ggplot2)
 library(latex2exp)
 
+script.dir <- dirname(sys.frame(1)$ofile)
+setwd(script.dir)
+
 vecs <- data.frame(
     x1 = c(0, 1, 1),
     x2 = c(1, 0, 1),
@@ -18,7 +21,7 @@ vec.expr <- "$a=(1, 1)$"
 x0vec.expr <- "$x=(1, 0)$"
 y0vec.expr <- "$y=(0, 1)$"
 
-ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-1, 2) + ylim(-1, 2) +
+ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-.3, 2) + ylim(-.3, 2) + guides(color = FALSE) +
     geom_segment(data = vecs, aes(x = 0, y = 0, xend = x1, yend = x2, color = datatype), arrow = arrow()) +
     geom_segment(data = projline, aes(x = xs, xend = xe, y = ys, yend = ye), linetype = "dashed") +
     annotate("text", x = 1.2, y = 1.1, label = TeX(vec.expr, output = "character"), parse = TRUE) + 
@@ -36,7 +39,7 @@ vecs2 <- rbind(vecs, data.frame(
 xvec.expr <- "$x'=(\\frac{\\sqrt{3}}{2}, \\frac{1}{2})$"
 yvec.expr <- "$y'=(-\\frac{1}{2}, \\frac{\\sqrt{3}}{2})$"
 
-ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-1, 2) + ylim(-1, 2) +
+ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-.6, 2) + ylim(-.3, 2) + guides(color = FALSE) +
     geom_segment(data = vecs2, aes(x = 0, y = 0, xend = x1, yend = x2, color = datatype), arrow = arrow()) +
     annotate("text", x = 1.1, y = 1.1, label = TeX(vec.expr, output = "character"), parse = TRUE) + 
     annotate("text", x = 1.1, y = 0.1, label = TeX(x0vec.expr, output = "character"), parse = TRUE) +
@@ -54,7 +57,7 @@ projline2 <- data.frame(
     ye = c(1, (1 + sqrt(3)) / 4, (3 - sqrt(3))/4)
 )
 
-ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-1, 2) + ylim(-1, 2) +
+ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-.6, 2) + ylim(-.3, 2) + guides(color = FALSE) +
     geom_segment(data = vecs2[c(-1, -2),], aes(x = 0, y = 0, xend = x1, yend = x2, color = datatype), arrow = arrow()) +
     geom_segment(data = projline2, aes(x = xs, xend = xe, y = ys, yend = ye), linetype = "dashed") +
     annotate("text", x = 1.1, y = 1.1, label = TeX(vec.expr, output = "character"), parse = TRUE) + 
@@ -65,7 +68,7 @@ ggsave("tranmat3.png")
 
 
 
-ggplot() + xlim(-1, 2) + ylim(-1, 2) +
+ggplot() + xlim(-.6, 2) + ylim(-.3, 2) + guides(color = FALSE) +
     geom_segment(data = vecs2[c(-1, -2),], aes(x = 0, y = 0, xend = x1, yend = x2, color = datatype), arrow = arrow()) +
     geom_segment(data = projline2, aes(x = xs, xend = xe, y = ys, yend = ye), linetype = "dashed") +
     annotate("text", x = 1.1, y = 1.1, label = TeX(vec.expr, output = "character"), parse = TRUE) + 
@@ -91,7 +94,7 @@ vec.expr <- "$a=(\\frac{1-\\sqrt{3}}{2}, \\frac{\\sqrt{3} - 1}{2})$"
 xvec.expr <- "x=(1, 0)"
 yvec.expr <- "y=(0, 1)"
 
-ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-1, 2) + ylim(-1, 2) +
+ggplot() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + xlim(-.3, 2) + ylim(-.3, 2) + guides(color = FALSE) +
     geom_segment(data = vecs3, aes(x = 0, y = 0, xend = x1, yend = x2, color = datatype), arrow = arrow()) +
     geom_segment(data = projline3, aes(x = xs, xend = xe, y = ys, yend = ye), linetype = "dashed") +
     annotate("text", x = (1 + sqrt(3)) / 2, y = (sqrt(3) - 1) / 2 + 0.2, label = TeX(vec.expr, output = "character"), parse = TRUE) + 
