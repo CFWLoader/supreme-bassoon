@@ -1,6 +1,7 @@
 gen_states <- function(maze)
 {
     states <- list()
+    gridmap <- list()
     cnt <- 1
     for(row in 1:nrow(maze))
     {
@@ -8,12 +9,13 @@ gen_states <- function(maze)
         {
             if(maze[row, col] != "#")
             {
-                states[[cnt]] <- c(row, col)
+                states[[cnt]] <- maze[row, col]
+                gridmap[[cnt]] <- c(row, col)
                 cnt <- cnt + 1
             }
         }
     }
-    states
+    list(states = states, gridmap = gridmap)
 }
 
 move <- function(pos, act)
@@ -36,15 +38,16 @@ move <- function(pos, act)
     }
 }
 
-eligibility <- function(pos, act, maze)
-{
-    moved <- move(pos, act)
-    return(-1)
-}
+# eligibility <- function(pos, act, maze)
+# {
+#     moved <- move(pos, act)
+#     return(-1)
+# }
 
 gen_tranmodel <- function(maze, actions)
 {
-    states <- gen_states(maze)
+    datapack <- gen_states(maze)
+    states <- datapack$states
     numstate <- length(states)
     numact <- length(actions)
     transition <- array(0, dim = c(numstate, numstate, numact))
