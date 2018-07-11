@@ -48,6 +48,7 @@ gen_tranmodel <- function(maze, actions)
 {
     datapack <- gen_states(maze)
     states <- datapack$states
+    gridmap <- datapack$gridmap
     numstate <- length(states)
     numact <- length(actions)
     transition <- array(0, dim = c(numstate, numstate, numact))
@@ -57,9 +58,19 @@ gen_tranmodel <- function(maze, actions)
         {
             for(k in numact)
             {
-                transition[[i, j, k]] <- eligibility(states[[i]], actions[k], maze)
+                if(i == j)
+                {
+                    t = move(gridmap[[i]], actions[k])
+                    transition[i, j, k] = ifelse(maze[t[0]][t[1]] == '#', 1, 0)  # check if state target is a wall (maze must be enclosed by walls)
+                }
+                else
+                {
+                    transition[i, j, k] = ifelse(all(move(gridmap[[i]], actions[k]) == gridmap[[j]]), 1, 0)
+                    # P[i,j,k] = (move(mapping[i], A[k]) == mapping[j]) + 0.0
+                }
             }
         }
     }
-    transition
+    datapack$transition.model <- transition
+    datapack
 }

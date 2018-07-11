@@ -15,4 +15,8 @@ actions <- c("up", "left", "right", "down")
 
 tranmodel <- gen_tranmodel(mazes[[1]], actions)
 
-str(tranmodel)
+# str(tranmodel)
+
+transitions <- tranmodel$transition.model
+
+print(length(which(transitions == 1)))
