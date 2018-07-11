@@ -56,12 +56,12 @@ gen_tranmodel <- function(maze, actions)
     {
         for(j in 1:numstate)
         {
-            for(k in numact)
+            for(k in 1:numact)
             {
                 if(i == j)
                 {
                     t = move(gridmap[[i]], actions[k])
-                    transition[i, j, k] = ifelse(maze[t[0]][t[1]] == '#', 1, 0)  # check if state target is a wall (maze must be enclosed by walls)
+                    transition[i, j, k] = ifelse(maze[t[0]][t[1]] == "#", 1, 0)  # check if state target is a wall (maze must be enclosed by walls)
                 }
                 else
                 {
