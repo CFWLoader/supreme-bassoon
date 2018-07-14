@@ -1,0 +1,4 @@
+analyticvalue <- function(maze)
+{
+
+}
