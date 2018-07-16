@@ -15,10 +15,10 @@ train_x <- data.matrix(train_set.df[c(1, 2)])
 train_x.white <- whiten(train_x)
 val_x.white <- whiten(data.matrix(validate_set.df[c(1, 2)]), train_x.white$params)
 
-ggplot(train_set.df, aes(x = x1, y = x2, fill = obs)) + scale_color_gradientn(colors = rainbow(50)) + geom_point(aes(color = obs))
+ggplot(train_set.df, aes(x = x1, y = x2)) + scale_color_gradientn(colors = rainbow(50)) + geom_point(aes(color = obs))
 ggsave("e5-1a-train.png")
 
-ggplot(validate_set.df, aes(x = x1, y = x2, fill = dens)) +  scale_color_gradientn(colors = rainbow(50)) + geom_point(aes(color = dens))
+ggplot(validate_set.df, aes(x = x1, y = x2)) + scale_color_gradientn(colors = rainbow(50)) + geom_point(aes(color = dens))
 ggsave("e5-1a-val.png")
 
 train_set.whitendf <- data.frame(
