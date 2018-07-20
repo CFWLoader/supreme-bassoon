@@ -42,4 +42,4 @@ kfold_validate <- function(fold_ready.df, k_fold, monomial_lim, lamstart = -4, l
     return(mse.df)
 }
 
-setwd(recor.dir)
+# setwd(recor.dir)
