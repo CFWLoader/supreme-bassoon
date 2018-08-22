@@ -23,6 +23,16 @@ testx <- make_plotpoint(trainset)
 csvm <- svm(trainx, trainy, type = "C-classification")
 testy <- predict(csvm, testx)
 # trainy.prd <- predict(cvsm, trainx)
+# str(csvm$SV)
+scaled.fac <- csvm$x.scale
+scale.center <- scaled.fac[1]
+scale.sigma <- scaled.fac[2]
+scaled.sv <- csvm$SV
+ori.sv <- scaled.sv
+ori.sv[,1] <- scaled.sv[,1] * scale.sigma[[1]][1] + scale.center[[1]][1]
+ori.sv[,2] <- scaled.sv[,2] * scale.sigma[[1]][2] + scale.center[[1]][2]
+
+trainset <- rbind(trainset, data.frame(x1 = ori.sv[, 1], x2 = ori.sv[, 2], y = 2))
 
 # print(length(which(trainy.prd == trainy))/length(trainy))
 
