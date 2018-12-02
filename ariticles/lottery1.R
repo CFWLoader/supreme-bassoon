@@ -1,20 +1,26 @@
+library(ggplot2)
+
+script.dir <- dirname(sys.frame(1)$ofile)
+setwd(script.dir)
+
 candies <- c(6, 37, 378, 22, 13, 22, 123456)
 
 canmin <- min(candies)
 canmax <- max(candies)
 
-stats_diff <- rep(0, times = length(diffs))
+stats_diff <- rep(0, times = length(candies))
 
-for(cnt in 1:1)
+for(cnt in 1:10000)
 {
     selectnum <- runif(1, max = canmax, min = canmin)
-    diffs <- abs(candies - selectnum)
-    minval <- diffs[1]
+    # print(ceiling(selectnum))
+    diffsvec <- abs(candies - selectnum)
+    minval <- diffsvec[1]
     targetidx <- candies[1]
-    for(idx in 1:length(diffs)){
-        if(diffs[idx] < minval)
+    for(idx in 1:length(diffsvec)){
+        if(diffsvec[idx] < minval)
         {
-            minval <- diffs[idx]
+            minval <- diffsvec[idx]
             targetidx <- idx
         }
     }
@@ -23,3 +29,8 @@ for(cnt in 1:1)
 
 luckylad <- stats_diff == max(stats_diff)
 print(candies[luckylad])
+
+plot.df <- data.frame(x = candies, y = stats_diff)
+
+ggplot(plot.df) + geom_bar(aes(x = factor(x), y = y), stat="identity")
+ggsave("./lottery1-stats.png")
