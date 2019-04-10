@@ -1,41 +1,70 @@
 library(ggplot2)
 
-plotRanks <- function(playerWealth, filePath, sortRanks = TRUE){
-    plotColumn = playerWealth
-    if(sortRanks){
-        plotColumn = sort(playerWealth)
-    }
-    plot.df <- data.frame(x = seq(1, length(playerWealth), 1), y = plotColumn)
+script.dir <- dirname(sys.frame(1)$ofile)
+setwd(script.dir)
+
+plotRanks <- function(playerWealth, filePath){
+    plot.df <- data.frame(x = seq(1, length(playerWealth), 1), y = playerWealth)
     ggplot(plot.df, aes(x = x, y = y)) + geom_bar(stat = "identity")
     ggsave(filePath)
 }
 
-script.dir <- dirname(sys.frame(1)$ofile)
-setwd(script.dir)
+searchBisectPoint <- function(sortedArr, bisectCriterion, sumDirection = "LR"){
+    startIdx = if(sumDirection == "LR") 1 else length(sortedArr)
+    endIdx = if(sumDirection == "LR") length(sortedArr) else 1
+    incSym = if(sumDirection == "LR") 1 else -1
+    sumVal = 0
+    loggedIdx = 1
+    for(idx in seq(startIdx, endIdx, incSym)){
+        nextSumVal = sumVal + sortedArr[idx]
+        if(nextSumVal > bisectCriterion){
+            loggedIdx = idx - incSym
+            break
+        }
+        sumVal = nextSumVal
+        loggedIdx = idx
+    }
+    return(loggedIdx)
+}
 
-numPlayer = 1000                 # 参与模拟的人数
-initWealth = 50000               # 参与人员初始财富值
-maxIterations = 17000            # 模拟的最大迭代数
+numPlayer <- 1000                 # 参与模拟的人数
+initWealth <- 50000               # 参与人员初始财富值
+maxIterations <- 17000            # 模拟的最大迭代数
+bisectTotalWealth <- numPlayer * initWealth / 2
 
 wealthArr = rep.int(initWealth, times = numPlayer)
-plotRanks(wealthArr, "./simPlots/SimIter0.png")
+# plotRanks(wealthArr, "./simPlots/SimIter0.png")
+
+bisQuantiles <- c()
 
 for(iter in 1:maxIterations)
 {
     # 一轮迭代中财富交换次数可以有什么模拟方法？目前暂且假定会发生{人数/4}次交易，即影响一半人左右
     # （因为考虑产生随机数可能发生自己与自己重叠）。
-    wealthExchangeTimes = numPlayer / 4
+    wealthExchangeTimes <- numPlayer / 4
     for(exchangeCnt in 1 : wealthExchangeTimes){
-        payerId = runif(1, min = 1, max = numPlayer)
-        payeeId = runif(1, min = 1, max = numPlayer)
+        payerId <- runif(1, min = 1, max = numPlayer)
+        payeeId <- runif(1, min = 1, max = numPlayer)
         if(payerId != payeeId)
         {
-            wealthArr[payeeId] = wealthArr[payeeId] + 1000
-            wealthArr[payerId] = wealthArr[payerId] - 1000
+            # 交易额产生方式
+            # dealSum = rnorm(1, mean = initWealth / 4, sd = initWealth * 0.01)
+            dealSum <- as.integer(rlnorm(1, meanlog = log(initWealth * 0.001), sdlog = 1.6))
+            wealthArr[payeeId] <- wealthArr[payeeId] + dealSum
+            wealthArr[payerId] <- wealthArr[payerId] - dealSum
         }
     }
-    if(iter %% 1000 == 0){
-    iterFilePath = sprintf("./simPlots/SimIter%d.png", iter)
-    plotRanks(wealthArr, iterFilePath)
-    }
+    sortedRanks <- sort(wealthArr)
+    bisPoint <- searchBisectPoint(sortedRanks, bisectTotalWealth)
+    bisQuantiles <- c(bisQuantiles, bisPoint)
+    # if(iter %% 1000 == 0){
+    #     iterFilePath <- sprintf("./simPlots/SimIter%d.png", iter)
+    #     plotRanks(sortedRanks, iterFilePath)
+    # }
 }
+
+bisplt.df <- data.frame(iteration = seq(1, maxIterations, 1), bisectQuantile = bisQuantiles)
+
+ggplot(bisplt.df) + geom_line(aes(x= iteration, y = bisectQuantile))
+
+ggsave("./simPlots/quatiles.png")
